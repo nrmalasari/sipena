@@ -6,9 +6,21 @@
 
     {{-- JUDUL --}}
     <div class="mb-6 animate-fade-up">
-        <h1 class="text-2xl font-bold text-gray-800">Selamat datang, Penguji!</h1>
-        <p class="mt-1 text-sm text-gray-500">Berikut adalah ringkasan proses penilaian hari ini.</p>
+        <h1 class="text-2xl font-bold text-gray-800">Selamat datang, {{ $namaPenguji }}!</h1>
+        <p class="mt-1 text-sm text-gray-500">
+            Anda login sebagai 
+            <span class="font-semibold {{ $tipePenguji === 'tertulis' ? 'text-purple-600' : 'text-blue-600' }}">
+                Penguji {{ ucfirst($tipePenguji) }}
+            </span>
+        </p>
     </div>
+
+    @php
+        $totalPeserta = count($semuaPeserta);
+        $totalSudah = count($sudahDinilai);
+        $totalBelum = $totalPeserta - $totalSudah;
+        $persen = $totalPeserta > 0 ? round(($totalSudah / $totalPeserta) * 100) : 0;
+    @endphp
 
     {{-- STAT CARDS --}}
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 mb-6">
@@ -21,7 +33,7 @@
                 </div>
                 <div>
                     <p class="text-xs font-medium text-gray-500">Total Peserta</p>
-                    <p class="text-3xl font-bold text-gray-800">20</p>
+                    <p class="text-3xl font-bold text-gray-800">{{ $totalPeserta }}</p>
                 </div>
             </div>
         </div>
@@ -36,7 +48,7 @@
                 </div>
                 <div>
                     <p class="text-xs font-medium text-gray-500">Sudah Dinilai</p>
-                    <p class="text-3xl font-bold text-gray-800">12</p>
+                    <p class="text-3xl font-bold text-gray-800">{{ $totalSudah }}</p>
                 </div>
             </div>
         </div>
@@ -51,7 +63,7 @@
                 </div>
                 <div>
                     <p class="text-xs font-medium text-gray-500">Belum Dinilai</p>
-                    <p class="text-3xl font-bold text-gray-800">8</p>
+                    <p class="text-3xl font-bold text-gray-800">{{ $totalBelum }}</p>
                 </div>
             </div>
         </div>
@@ -61,10 +73,10 @@
     <div class="animate-fade-up delay-200 rounded-xl bg-white p-6 shadow-sm mb-6">
         <div class="flex items-center justify-between">
             <h3 class="text-base font-bold text-gray-800">Progres Penilaian</h3>
-            <span class="text-lg font-bold text-gray-800">60%</span>
+            <span class="text-lg font-bold text-gray-800">{{ $persen }}%</span>
         </div>
         <div class="mt-4 h-3 w-full overflow-hidden rounded-full bg-gray-200">
-            <div class="h-full rounded-full bg-gradient-to-r from-blue-400 to-blue-600" style="width: 60%"></div>
+            <div class="h-full rounded-full bg-gradient-to-r from-blue-400 to-blue-600" style="width: {{ $persen }}%"></div>
         </div>
     </div>
 
@@ -76,15 +88,9 @@
             </svg>
         </div>
         <div class="flex-1">
-            <div class="flex items-center justify-between">
-                <h3 class="font-bold text-gray-800">Pengumuman</h3>
-                <div class="text-right">
-                    <p class="text-xs text-blue-600 font-semibold">Terakhir diperbarui</p>
-                    <p class="text-xs text-gray-500">12 Jun 2025 10:24</p>
-                </div>
-            </div>
+            <h3 class="font-bold text-gray-800">Pengumuman</h3>
             <p class="mt-2 text-sm text-gray-600">
-                Penilaian dilakukan secara bersamaan oleh 2 penguji. Pastikan Anda selalu memperbarui nilai agar dapat dilihat secara real-time oleh penguji lainnya.
+                Penilaian dilakukan secara bersamaan oleh 2 penguji. Pastikan Anda selalu memperbarui nilai agar dapat dilihat secara real-time.
             </p>
         </div>
     </div>
@@ -94,9 +100,9 @@
         <div class="mb-4 flex items-center justify-between">
             <div>
                 <h3 class="text-base font-bold text-gray-800">Peserta Terbaru</h3>
-                <p class="text-xs text-gray-500 mt-0.5">5 peserta terakhir yang ditambahkan</p>
+                <p class="text-xs text-gray-500 mt-0.5">5 peserta terakhir</p>
             </div>
-            <a href="#" class="flex items-center gap-1 text-sm font-semibold text-blue-600 hover:underline">
+            <a href="{{ route('peserta.penilaian') }}" class="flex items-center gap-1 text-sm font-semibold text-blue-600 hover:underline">
                 Lihat Semua Peserta
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -113,38 +119,34 @@
                         <th class="px-4 py-3 font-semibold text-gray-600">Instansi</th>
                         <th class="px-4 py-3 font-semibold text-gray-600">Jabatan</th>
                         <th class="px-4 py-3 font-semibold text-gray-600">Status</th>
-                        <th class="px-4 py-3 font-semibold text-gray-600">Aksi</th>
+                        <th class="px-4 py-3 text-center font-semibold text-gray-600">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-700">
-                    @php
-                        // Hanya 5 peserta terbaru untuk dashboard
-                        $pesertaTerbaru = [
-                            ['Andi Pratama', 'Kota Magelang', 'Analis Kepegawaian', 'Naik Jenjang'],
-                            ['Siti Nurhaliza', 'Kab. Semarang', 'Kepala Sub Bidang', 'Perpindahan Jabatan'],
-                            ['Budi Santoso', 'Pemprov Jawa Tengah', 'Auditor Muda', 'Naik Jenjang'],
-                            ['Rina Oktaviani', 'Kab. Kebumen', 'Perencana Ahli Muda', 'Perpindahan Jabatan'],
-                            ['Dedi Kurniawan', 'Kota Surakarta', 'Penyuluh Sosial', 'Naik Jenjang'],
-                        ];
-                    @endphp
-
                     @foreach ($pesertaTerbaru as $i => $p)
+                        @php
+                            $isSudahDinilai = in_array($p[0], $sudahDinilai);
+                        @endphp
                         <tr class="border-b border-gray-100 hover:bg-gray-50">
                             <td class="px-4 py-3">{{ $i + 1 }}</td>
                             <td class="px-4 py-3 font-medium">{{ $p[0] }}</td>
                             <td class="px-4 py-3">{{ $p[1] }}</td>
                             <td class="px-4 py-3">{{ $p[2] }}</td>
                             <td class="px-4 py-3">
-                                @if ($p[3] == 'Naik Jenjang')
-                                    <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">Naik Jenjang</span>
+                                @if ($isSudahDinilai)
+                                    <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">Sudah Dinilai</span>
                                 @else
-                                    <span class="rounded-full bg-purple-100 px-3 py-1 text-xs font-semibold text-purple-700">Perpindahan Jabatan</span>
+                                    <span class="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600">Belum Dinilai</span>
                                 @endif
                             </td>
-                            <td class="px-4 py-3">
-                                <button class="rounded-lg bg-blue-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-blue-700">
-                                    Nilai
-                                </button>
+                            <td class="px-4 py-3 text-center">
+                                <a href="{{ route('peserta.penilaian') }}?buka={{ urlencode($p[0]) }}"
+                                   class="inline-block rounded-lg px-4 py-1.5 text-xs font-semibold 
+                                          {{ $isSudahDinilai 
+                                             ? 'bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-50' 
+                                             : 'bg-blue-600 text-white hover:bg-blue-700' }}">
+                                    {{ $isSudahDinilai ? 'Lihat' : 'Nilai' }}
+                                </a>
                             </td>
                         </tr>
                     @endforeach
@@ -152,10 +154,9 @@
             </table>
         </div>
 
-        {{-- Info + tombol lihat semua --}}
         <div class="mt-4 flex items-center justify-between">
-            <p class="text-xs text-gray-500">Menampilkan 5 dari 20 peserta</p>
-            <a href="#" class="flex items-center gap-1 text-xs font-semibold text-blue-600 hover:underline">
+            <p class="text-xs text-gray-500">Menampilkan {{ count($pesertaTerbaru) }} dari {{ $totalPeserta }} peserta</p>
+            <a href="{{ route('peserta.penilaian') }}" class="flex items-center gap-1 text-xs font-semibold text-blue-600 hover:underline">
                 Lihat semua peserta
                 <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
