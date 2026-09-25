@@ -52,6 +52,19 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // ============ SWEETALERT: SUKSES ============
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil Disimpan!',
+            text: 'Penilaian Anda telah berhasil disimpan.',
+            confirmButtonColor: '#2563eb',
+            confirmButtonText: 'OK',
+            timer: 2000,
+            timerProgressBar: true,
+            showConfirmButton: false
+        });
+
+        // ============ AUTO REDIRECT ============
         let detik = 3;
         const countdown = document.getElementById('countdown');
 

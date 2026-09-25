@@ -7,6 +7,9 @@
 
     <!-- Tailwind via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="min-h-screen bg-gray-100">
 
@@ -16,14 +19,13 @@
         <div class="relative hidden w-1/2 lg:flex flex-col overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-blue-600 p-12 text-white">
 
             <!-- ============ BACKGROUND AWAN ============ -->
-            <!-- Gambar awan sebagai layer paling belakang -->
             <div class="absolute inset-0 z-0">
                 <img src="https://images.unsplash.com/photo-1534088568595-a066f410bcda?w=1200&q=80" 
                      alt="Awan" 
                      class="h-full w-full object-cover object-center opacity-30">
             </div>
 
-            <!-- Overlay biru transparan di atas awan supaya warnanya selaras -->
+            <!-- Overlay biru transparan di atas awan -->
             <div class="absolute inset-0 z-0 bg-gradient-to-br from-blue-900/90 via-blue-800/80 to-blue-600/70"></div>
 
             <!-- ============ LOGO LAN RI DI KIRI ATAS ============ -->
@@ -54,11 +56,10 @@
                 <img src="{{ asset('images/gedung-lanri.png') }}" 
                      alt="Gedung LAN RI" 
                      class="h-full w-full object-cover object-center opacity-95">
-                <!-- Overlay gradasi bawah agar transisi mulus -->
                 <div class="absolute inset-0 bg-gradient-to-t from-blue-900/90 via-blue-900/30 to-transparent"></div>
             </div>
 
-            <!-- ============ ORNAMEN BLUR (AKSEN MERAH & BIRU) ============ -->
+            <!-- ============ ORNAMEN BLUR ============ -->
             <div class="absolute -bottom-20 -left-20 z-0 h-80 w-80 rounded-full bg-red-600/30 blur-3xl"></div>
             <div class="absolute -bottom-10 left-20 z-0 h-60 w-60 rounded-full bg-blue-400/30 blur-3xl"></div>
         </div>
@@ -110,9 +111,6 @@
                                    class="w-full rounded-lg border border-gray-300 py-3 pl-10 pr-4 text-gray-700 
                                           focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none">
                         </div>
-                        @error('email')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
                     </div>
 
                     <!-- Password -->
@@ -139,9 +137,6 @@
                                 </svg>
                             </button>
                         </div>
-                        @error('password')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
                     </div>
 
                     <!-- Ingat Saya & Lupa Password -->
@@ -197,6 +192,19 @@
                 `;
             }
         }
+
+        // ============ SWEETALERT: LOGIN GAGAL ============
+        @if ($errors->any())
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Login Gagal',
+                    text: '{{ $errors->first() }}',
+                    confirmButtonColor: '#2563eb',
+                    confirmButtonText: 'Coba Lagi'
+                });
+            });
+        @endif
     </script>
 
 </body>

@@ -158,6 +158,7 @@
             @csrf
             <input type="hidden" name="peserta_nama" id="inputPesertaNama" value="">
 
+            {{-- CARD INFO PESERTA & PENGUJI --}}
             <div class="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
 
                 {{-- Info Peserta --}}
@@ -241,7 +242,7 @@
                 </div>
             </div>
 
-            {{-- TABEL WAWANCARA --}}
+            {{-- ================= TABEL WAWANCARA ================= --}}
             @if ($tipePenguji === 'wawancara')
                 <div class="mb-6 rounded-xl bg-white shadow-sm">
                     <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
@@ -259,24 +260,27 @@
                                     <th class="px-4 py-3 font-semibold text-gray-600">Judul Unit</th>
                                     <th class="px-4 py-3 font-semibold text-gray-600">Jenis</th>
                                     <th class="px-4 py-3 font-semibold text-gray-600">Elemen Kompetensi</th>
-                                    <th class="px-4 py-3 text-center font-semibold text-gray-600">Nilai Anda</th>
+                                    <th class="px-4 py-3 text-center font-semibold text-gray-600">Nilai P1 (Anda)</th>
+                                    <th class="px-4 py-3 text-center font-semibold text-gray-600">Nilai P2 (Live)</th>
+                                    <th class="px-4 py-3 text-center font-semibold text-gray-600">Rata-rata</th>
                                     <th class="px-4 py-3 font-semibold text-gray-600">Catatan Anda</th>
+                                    <th class="px-4 py-3 font-semibold text-gray-600">Catatan P2</th>
                                 </tr>
                             </thead>
                             <tbody class="text-gray-700">
                                 @php
                                     $wawancara = [
-                                        ['Kemampuan Analisis', 'Kompetensi Inti', 'Pengetahuan tentang Bidang Pekerjaan'],
-                                        ['', '', 'Kemampuan menulis dan publikasi'],
-                                        ['Kemampuan Politis', 'Kompetensi Inti', 'Konteks Politik'],
-                                        ['', '', 'Regulasi dan Legislasi'],
-                                        ['', '', 'Komunikasi'],
-                                        ['', '', 'Membangun jejaring'],
-                                        ['', 'Kompetensi Spesialis', 'Presentasi'],
-                                        ['', '', 'Konsultasi Publik'],
-                                        ['', '', 'Partnership'],
-                                        ['Kemampuan Analisis & Politis', 'Kompetensi Dasar', 'Manajemen Diri'],
-                                        ['', '', 'Membangun Tim'],
+                                        ['Kemampuan Analisis', 'Kompetensi Inti', 'Pengetahuan tentang Bidang Pekerjaan', 70, 80],
+                                        ['', '', 'Kemampuan menulis dan publikasi', 80, 82],
+                                        ['Kemampuan Politis', 'Kompetensi Inti', 'Konteks Politik', null, null],
+                                        ['', '', 'Regulasi dan Legislasi', null, null],
+                                        ['', '', 'Komunikasi', null, null],
+                                        ['', '', 'Membangun jejaring', null, null],
+                                        ['', 'Kompetensi Spesialis', 'Presentasi', null, null],
+                                        ['', '', 'Konsultasi Publik', null, null],
+                                        ['', '', 'Partnership', null, null],
+                                        ['Kemampuan Analisis & Politis', 'Kompetensi Dasar', 'Manajemen Diri', 75, 77],
+                                        ['', '', 'Membangun Tim', 85, 75],
                                     ];
                                 @endphp
 
@@ -292,14 +296,46 @@
                                         <td class="px-4 py-3 text-center">
                                             <input type="number" 
                                                    name="wawancara[{{ $i }}]"
-                                                   class="input-nilai w-20 rounded-lg border border-gray-300 px-2 py-1.5 text-center text-sm font-semibold text-blue-700
+                                                   class="input-nilai w-16 rounded-lg border border-gray-300 px-2 py-1.5 text-center text-sm font-semibold text-blue-700
                                                           focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                                                   value="{{ $k[3] ?? '' }}"
                                                    min="0" max="100" placeholder="—">
+                                        </td>
+                                        <td class="px-4 py-3 text-center">
+                                            @if (!is_null($k[4]))
+                                                <div class="flex items-center justify-center gap-1.5">
+                                                    <span class="text-sm font-semibold text-green-700">{{ $k[4] }}</span>
+                                                    <span class="inline-flex items-center gap-1 rounded-full bg-green-100 px-1.5 py-0.5 text-[9px] font-semibold text-green-700">
+                                                        <span class="h-1 w-1 animate-pulse rounded-full bg-green-500"></span>
+                                                        Live
+                                                    </span>
+                                                </div>
+                                            @else
+                                                <span class="text-gray-300">—</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-4 py-3 text-center">
+                                            <span class="rata-rata text-sm font-semibold text-gray-800">
+                                                @if (!is_null($k[3]) && !is_null($k[4]))
+                                                    {{ number_format(($k[3] + $k[4]) / 2, 1, ',', '.') }}
+                                                @else
+                                                    —
+                                                @endif
+                                            </span>
                                         </td>
                                         <td class="px-4 py-3">
                                             <textarea rows="1" placeholder="Catatan..."
-                                                      class="w-full min-w-[200px] resize-none rounded-lg border border-gray-300 px-2 py-1.5 text-xs
+                                                      class="w-full min-w-[140px] resize-none rounded-lg border border-gray-300 px-2 py-1.5 text-xs
                                                              focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"></textarea>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-1.5 text-xs text-gray-400">
+                                                <svg class="h-3.5 w-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                          d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                                </svg>
+                                                <span class="italic">Terkunci</span>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -309,7 +345,7 @@
                 </div>
             @endif
 
-            {{-- TABEL TERTULIS --}}
+            {{-- ================= TABEL TERTULIS ================= --}}
             @if ($tipePenguji === 'tertulis')
                 <div class="mb-6 rounded-xl bg-white shadow-sm">
                     <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
@@ -327,18 +363,21 @@
                                     <th class="px-4 py-3 font-semibold text-gray-600">Judul Unit</th>
                                     <th class="px-4 py-3 font-semibold text-gray-600">Jenis</th>
                                     <th class="px-4 py-3 font-semibold text-gray-600">Elemen Kompetensi</th>
-                                    <th class="px-4 py-3 text-center font-semibold text-gray-600">Nilai Anda</th>
+                                    <th class="px-4 py-3 text-center font-semibold text-gray-600">Nilai P1 (Anda)</th>
+                                    <th class="px-4 py-3 text-center font-semibold text-gray-600">Nilai P2 (Live)</th>
+                                    <th class="px-4 py-3 text-center font-semibold text-gray-600">Rata-rata</th>
                                     <th class="px-4 py-3 font-semibold text-gray-600">Catatan Anda</th>
+                                    <th class="px-4 py-3 font-semibold text-gray-600">Catatan P2</th>
                                 </tr>
                             </thead>
                             <tbody class="text-gray-700">
                                 @php
                                     $tertulis = [
-                                        ['Kemampuan Analisis', 'Kompetensi Inti', 'Pengetahuan tentang substansi Kebijakan Publik'],
-                                        ['', '', 'Metode Riset'],
-                                        ['', '', 'Teknik dan Analisis Kebijakan'],
-                                        ['', 'Kompetensi Spesialis', 'Penyusunan Saran Kebijakan'],
-                                        ['Kemampuan Politis', 'Kompetensi Inti', 'Regulasi dan Legislasi'],
+                                        ['Kemampuan Analisis', 'Kompetensi Inti', 'Pengetahuan tentang substansi Kebijakan Publik', null, 78],
+                                        ['', '', 'Metode Riset', null, 80],
+                                        ['', '', 'Teknik dan Analisis Kebijakan', null, 75],
+                                        ['', 'Kompetensi Spesialis', 'Penyusunan Saran Kebijakan', null, 82],
+                                        ['Kemampuan Politis', 'Kompetensi Inti', 'Regulasi dan Legislasi', null, 79],
                                     ];
                                 @endphp
 
@@ -354,14 +393,46 @@
                                         <td class="px-4 py-3 text-center">
                                             <input type="number" 
                                                    name="tertulis[{{ $i }}]"
-                                                   class="input-nilai w-20 rounded-lg border border-gray-300 px-2 py-1.5 text-center text-sm font-semibold text-purple-700
+                                                   class="input-nilai w-16 rounded-lg border border-gray-300 px-2 py-1.5 text-center text-sm font-semibold text-purple-700
                                                           focus:border-purple-500 focus:ring-2 focus:ring-purple-200 focus:outline-none"
+                                                   value="{{ $k[3] ?? '' }}"
                                                    min="0" max="100" placeholder="—">
+                                        </td>
+                                        <td class="px-4 py-3 text-center">
+                                            @if (!is_null($k[4]))
+                                                <div class="flex items-center justify-center gap-1.5">
+                                                    <span class="text-sm font-semibold text-green-700">{{ $k[4] }}</span>
+                                                    <span class="inline-flex items-center gap-1 rounded-full bg-green-100 px-1.5 py-0.5 text-[9px] font-semibold text-green-700">
+                                                        <span class="h-1 w-1 animate-pulse rounded-full bg-green-500"></span>
+                                                        Live
+                                                    </span>
+                                                </div>
+                                            @else
+                                                <span class="text-gray-300">—</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-4 py-3 text-center">
+                                            <span class="rata-rata-t text-sm font-semibold text-gray-800">
+                                                @if (!is_null($k[3]) && !is_null($k[4]))
+                                                    {{ number_format(($k[3] + $k[4]) / 2, 1, ',', '.') }}
+                                                @else
+                                                    —
+                                                @endif
+                                            </span>
                                         </td>
                                         <td class="px-4 py-3">
                                             <textarea rows="1" placeholder="Catatan..."
-                                                      class="w-full min-w-[200px] resize-none rounded-lg border border-gray-300 px-2 py-1.5 text-xs
+                                                      class="w-full min-w-[140px] resize-none rounded-lg border border-gray-300 px-2 py-1.5 text-xs
                                                              focus:border-purple-500 focus:ring-2 focus:ring-purple-200 focus:outline-none"></textarea>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-1.5 text-xs text-gray-400">
+                                                <svg class="h-3.5 w-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                          d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                                </svg>
+                                                <span class="italic">Terkunci</span>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -411,8 +482,8 @@
                             class="flex items-center gap-2 rounded-lg border border-blue-500 px-6 py-2.5 text-sm font-semibold text-blue-600 transition hover:bg-blue-50">
                         Simpan Draft
                     </button>
-                    <button type="submit"
-                            onclick="return confirm('Yakin selesaikan penilaian?')"
+                    <button type="button"
+                            onclick="konfirmasiSelesai()"
                             class="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-blue-600/30 transition hover:bg-blue-700">
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
@@ -428,6 +499,10 @@
 
 @push('scripts')
 <script>
+    // Data nilai P2 (hardcoded, nanti bisa dari API)
+    const nilaiP2Wawancara = [80, 82, null, null, null, null, null, null, null, 77, 75];
+    const nilaiP2Tertulis  = [78, 80, 75, 82, 79];
+
     function bukaFormPenilaian(nama, instansi, jabatan, sudahDinilai) {
         document.getElementById('infoNamaPeserta').textContent = nama;
         document.getElementById('infoInstansi').textContent = instansi;
@@ -453,28 +528,67 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // ============ SWEETALERT: KONFIRMASI SELESAI ============
+    function konfirmasiSelesai() {
+        Swal.fire({
+            title: 'Selesaikan Penilaian?',
+            text: 'Setelah disimpan, nilai tidak dapat diubah lagi.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#2563eb',
+            cancelButtonColor: '#9ca3af',
+            confirmButtonText: 'Ya, Selesaikan',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('formPenilaian').submit();
+            }
+        });
+    }
+
     function hitungSemua() {
         const inputNilai = document.querySelectorAll('.input-nilai');
+        const rataRata = document.querySelectorAll('.rata-rata, .rata-rata-t');
         const totalRata = document.getElementById('totalRata');
         const totalBar = document.getElementById('totalBar');
         const statusKelulusan = document.getElementById('statusKelulusan');
         const nilaiAndaDisplay = document.getElementById('nilaiAndaDisplay');
 
+        // Pilih nilai P2 sesuai tipe
+        const isTertulis = {{ $tipePenguji === 'tertulis' ? 'true' : 'false' }};
+        const nilaiP2 = isTertulis ? nilaiP2Tertulis : nilaiP2Wawancara;
+
         let total = 0, count = 0;
-        inputNilai.forEach(input => {
+        let totalNilaiAnda = 0, countNilaiAnda = 0;
+
+        inputNilai.forEach((input, i) => {
+            const v1 = parseFloat(input.value) || 0;
+            const v2 = nilaiP2[i];
+
             if (input.value !== '') {
-                total += parseFloat(input.value) || 0;
+                totalNilaiAnda += v1;
+                countNilaiAnda++;
+            }
+
+            if (input.value !== '' && v2 !== null && v2 !== undefined) {
+                const rata = (v1 + v2) / 2;
+                if (rataRata[i]) rataRata[i].textContent = rata.toFixed(1).replace('.', ',');
+                total += rata;
                 count++;
+            } else {
+                if (rataRata[i]) rataRata[i].textContent = '—';
             }
         });
+
+        if (nilaiAndaDisplay) {
+            const rataAnda = countNilaiAnda > 0 ? (totalNilaiAnda / countNilaiAnda) : 0;
+            nilaiAndaDisplay.textContent = rataAnda.toFixed(1).replace('.', ',');
+        }
 
         const rata = count > 0 ? (total / count) : 0;
         totalRata.textContent = rata.toFixed(1).replace('.', ',');
         totalBar.style.width = Math.min(rata, 100) + '%';
-
-        if (nilaiAndaDisplay) {
-            nilaiAndaDisplay.textContent = rata.toFixed(1).replace('.', ',');
-        }
 
         if (count === 0) {
             statusKelulusan.className = 'inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-500';
