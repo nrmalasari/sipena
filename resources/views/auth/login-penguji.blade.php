@@ -43,8 +43,8 @@
             <div class="relative z-20 mt-10">
                 <h2 class="text-4xl font-bold leading-tight">
                     Sistem Penilaian<br>
-                    Calon Peserta<br>
-                    Penguji LAN RI
+                    Uji Kompetensi<br>
+                    JF Analisis Kebijakan<br>
                 </h2>
                 <p class="mt-6 max-w-md text-blue-100 leading-relaxed">
                     Bersama meningkatkan kualitas aparatur sipil negara untuk Indonesia yang lebih baik.

@@ -20,9 +20,10 @@ class LoginPengujiSeeder extends Seeder
             'tipe_penguji' => 'none',
             'jabatan'      => 'Administrator Sistem',
             'instansi'     => 'LAN RI',
+            'is_active'    => true,
         ]);
 
-        // ============ PENGUJI WAWANCARA (2 ORANG) ============
+        // ============ PENGUJI WAWANCARA ============
         LoginPenguji::create([
             'nama'         => 'Dr. Muhammad Aswad, M.Si',
             'email'        => 'aswad@lanri.go.id',
@@ -35,6 +36,7 @@ class LoginPengujiSeeder extends Seeder
             'jabatan'      => 'LAN RI Pusjar SKMP Makassar',
             'instansi'     => 'LAN RI Pusjar SKMP Makassar',
             'kelompok'     => 'Kelompok 1',
+            'is_active'    => true,
         ]);
 
         LoginPenguji::create([
@@ -49,9 +51,10 @@ class LoginPengujiSeeder extends Seeder
             'jabatan'      => 'LAN RI Pusjar SKMP Makassar',
             'instansi'     => 'LAN RI Pusjar SKMP Makassar',
             'kelompok'     => 'Kelompok 1',
+            'is_active'    => true,
         ]);
 
-        // ============ PENGUJI TERTULIS (2 ORANG) ============
+        // ============ PENGUJI TERTULIS ============
         LoginPenguji::create([
             'nama'         => 'Dr. Sulaeman Fattah, M.Si',
             'email'        => 'sulaeman.tertulis@lanri.go.id',
@@ -64,6 +67,7 @@ class LoginPengujiSeeder extends Seeder
             'jabatan'      => 'LAN RI Pusjar SKMP Makassar',
             'instansi'     => 'LAN RI Pusjar SKMP Makassar',
             'kelompok'     => 'Kelompok 1',
+            'is_active'    => true,
         ]);
 
         LoginPenguji::create([
@@ -78,6 +82,7 @@ class LoginPengujiSeeder extends Seeder
             'jabatan'      => 'LAN RI Pusjar SKMP Makassar',
             'instansi'     => 'LAN RI Pusjar SKMP Makassar',
             'kelompok'     => 'Kelompok 1',
+            'is_active'    => true,
         ]);
     }
 }

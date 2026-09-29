@@ -1,4 +1,4 @@
-{{-- ================= SIDEBAR PENILAI ================= --}}
+{{-- ================= SIDEBAR ADMIN ================= --}}
 
 {{-- OVERLAY (muncul saat sidebar terbuka di mobile) --}}
 <div id="sidebarOverlay"
@@ -7,7 +7,7 @@
 </div>
 
 {{-- SIDEBAR --}}
-<aside id="sidebarPenilai"
+<aside id="sidebarAdmin"
        class="fixed left-0 top-0 bottom-0 z-50 flex w-64 flex-col bg-gradient-to-b
               from-blue-950 via-blue-900 to-blue-950 text-white
               transform -translate-x-full transition-transform duration-300 ease-in-out
@@ -38,58 +38,102 @@
     </div>
 
     {{-- MENU --}}
-    <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto scrollbar-thin">
+    <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto scrollbar-thin">
 
         {{-- Dashboard --}}
-        <a href="{{ route('dashboard.penguji') }}"
+        <a href="{{ route('admin.dashboard') }}"
            onclick="handleMenuClick()"
-           class="flex items-center gap-3 rounded-lg px-4 py-3 font-semibold transition
-                  {{ request()->routeIs('dashboard.penguji')
+           class="flex items-center gap-3 rounded-lg px-4 py-3 transition
+                  {{ request()->routeIs('admin.dashboard') || request()->routeIs('admin.dashboard.*')
                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
                      : 'text-blue-100 hover:bg-blue-800/60 hover:text-white' }}">
             <svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
             </svg>
-            <span class="text-sm truncate">Dashboard</span>
+            <span class="text-sm font-semibold truncate">Dashboard</span>
         </a>
 
-        {{-- Peserta & Penilaian --}}
-        <a href="{{ route('peserta.penilaian') }}"
+        {{-- Data Peserta --}}
+        <a href="{{ route('admin.peserta') }}"
            onclick="handleMenuClick()"
            class="flex items-center gap-3 rounded-lg px-4 py-3 transition
-                  {{ request()->routeIs('peserta.penilaian')
+                  {{ request()->routeIs('admin.peserta') || request()->routeIs('admin.peserta.*')
                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
                      : 'text-blue-100 hover:bg-blue-800/60 hover:text-white' }}">
             <svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
             </svg>
-            <span class="text-sm truncate">Peserta & Penilaian</span>
+            <span class="text-sm font-semibold truncate">Data Peserta</span>
         </a>
 
-        {{-- ✅ PANDUAN (BARU) --}}
-        <a href="{{ route('panduan.penguji') }}"
+        {{-- Data Penilai — ✅ FIXED: pakai OR, bukan cuma * --}}
+        <a href="{{ route('admin.penilai') }}"
            onclick="handleMenuClick()"
            class="flex items-center gap-3 rounded-lg px-4 py-3 transition
-                  {{ request()->routeIs('panduan.penguji')
+                  {{ request()->routeIs('admin.penilai') || request()->routeIs('admin.penilai.*')
                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
                      : 'text-blue-100 hover:bg-blue-800/60 hover:text-white' }}">
             <svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                      d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
             </svg>
-            <span class="text-sm truncate">Panduan</span>
+            <span class="text-sm font-semibold truncate">Data Penilai</span>
+        </a>
+
+        {{-- Penilaian — ✅ FIXED: pakai OR, bukan cuma * --}}
+        <a href="{{ route('admin.penilaian') }}"
+           onclick="handleMenuClick()"
+           class="flex items-center gap-3 rounded-lg px-4 py-3 transition
+                  {{ request()->routeIs('admin.penilaian') || request()->routeIs('admin.penilaian.*')
+                     ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
+                     : 'text-blue-100 hover:bg-blue-800/60 hover:text-white' }}">
+            <svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+            </svg>
+            <span class="text-sm font-semibold truncate">Penilaian</span>
+        </a>
+
+        {{-- Laporan --}}
+        <a href="{{ route('admin.laporan') }}"
+           onclick="handleMenuClick()"
+           class="flex items-center gap-3 rounded-lg px-4 py-3 transition
+                  {{ request()->routeIs('admin.laporan') || request()->routeIs('admin.laporan.*')
+                     ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
+                     : 'text-blue-100 hover:bg-blue-800/60 hover:text-white' }}">
+            <svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+            <span class="text-sm font-semibold truncate">Laporan</span>
+        </a>
+
+        {{-- Pengaturan --}}
+        <a href="{{ route('admin.pengaturan') }}"
+           onclick="handleMenuClick()"
+           class="flex items-center gap-3 rounded-lg px-4 py-3 transition
+                  {{ request()->routeIs('admin.pengaturan') || request()->routeIs('admin.pengaturan.*')
+                     ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
+                     : 'text-blue-100 hover:bg-blue-800/60 hover:text-white' }}">
+            <svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <span class="text-sm font-semibold truncate">Pengaturan</span>
         </a>
     </nav>
 
     {{-- TOMBOL KELUAR --}}
     <div class="px-4 pb-6">
-        <form method="POST" action="{{ route('logout.penguji') }}" id="formLogoutSidebar" class="hidden">
+        <form method="POST" action="{{ route('logout.penguji') }}" id="formLogoutAdmin" class="hidden">
             @csrf
         </form>
         <button type="button"
-                onclick="konfirmasiLogoutSidebar()"
+                onclick="konfirmasiLogoutAdmin()"
                 class="flex w-full items-center gap-3 rounded-lg border border-blue-700 px-4 py-3 text-blue-100
                        transition hover:bg-red-600 hover:border-red-600 hover:text-white">
             <svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -101,10 +145,10 @@
     </div>
 </aside>
 
-{{-- ================= JAVASCRIPT SIDEBAR PENILAI ================= --}}
+{{-- ================= JAVASCRIPT SIDEBAR ================= --}}
 <script>
     function openSidebar() {
-        const sidebar = document.getElementById('sidebarPenilai');
+        const sidebar = document.getElementById('sidebarAdmin');
         const overlay = document.getElementById('sidebarOverlay');
         if (!sidebar || !overlay) return;
         sidebar.classList.remove('-translate-x-full');
@@ -113,7 +157,7 @@
     }
 
     function closeSidebar() {
-        const sidebar = document.getElementById('sidebarPenilai');
+        const sidebar = document.getElementById('sidebarAdmin');
         const overlay = document.getElementById('sidebarOverlay');
         if (!sidebar || !overlay) return;
         sidebar.classList.add('-translate-x-full');
@@ -128,7 +172,7 @@
     }
 
     window.addEventListener('resize', function () {
-        const sidebar = document.getElementById('sidebarPenilai');
+        const sidebar = document.getElementById('sidebarAdmin');
         const overlay = document.getElementById('sidebarOverlay');
         if (!sidebar || !overlay) return;
 
@@ -143,10 +187,10 @@
         }
     });
 
-    function konfirmasiLogoutSidebar() {
+    function konfirmasiLogoutAdmin() {
         Swal.fire({
             title: 'Keluar dari Aplikasi?',
-            text: 'Anda akan keluar dari sesi ini. Yakin ingin melanjutkan?',
+            text: 'Anda akan keluar dari sesi admin.',
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#dc2626',
@@ -156,7 +200,7 @@
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                document.getElementById('formLogoutSidebar').submit();
+                document.getElementById('formLogoutAdmin').submit();
             }
         });
     }

@@ -33,6 +33,9 @@ class LoginPenguji extends Authenticatable
         'remember_token',
     ];
 
+    /**
+     * TIDAK pakai cast 'hashed' — biar konsisten pakai Hash::make() manual
+     */
     protected $casts = [
         'is_active'     => 'boolean',
         'last_login_at' => 'datetime',

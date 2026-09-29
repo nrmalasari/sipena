@@ -8,18 +8,46 @@
     <div class="mb-6 animate-fade-up">
         <h1 class="text-2xl font-bold text-gray-800">Selamat datang, {{ $namaPenguji }}!</h1>
         <p class="mt-1 text-sm text-gray-500">
-            Anda login sebagai 
-            <span class="font-semibold {{ $tipePenguji === 'tertulis' ? 'text-purple-600' : 'text-blue-600' }}">
-                Penguji {{ ucfirst($tipePenguji) }}
-            </span>
+            Anda login sebagai
+            @if ($isBoth ?? false)
+                <span class="font-semibold text-blue-600">Penguji Wawancara & Tertulis</span>
+            @else
+                <span class="font-semibold {{ $tipePenguji === 'tertulis' ? 'text-purple-600' : 'text-blue-600' }}">
+                    Penguji {{ ucfirst($tipePenguji) }}
+                </span>
+            @endif
         </p>
     </div>
 
+    {{-- TAB PILIH TIPE (kalau 'both') --}}
+    @if ($isBoth ?? false)
+        <div class="mb-6 flex gap-2 border-b-2 border-gray-200 animate-fade-up">
+            <a href="{{ route('dashboard.penguji', ['tipe' => 'wawancara']) }}"
+               class="flex items-center gap-2 px-6 py-3 text-sm font-semibold border-b-2 transition
+                      {{ $tipePenguji === 'wawancara' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700' }}">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                Wawancara
+            </a>
+            <a href="{{ route('dashboard.penguji', ['tipe' => 'tertulis']) }}"
+               class="flex items-center gap-2 px-6 py-3 text-sm font-semibold border-b-2 transition
+                      {{ $tipePenguji === 'tertulis' ? 'border-purple-600 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700' }}">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                Tertulis
+            </a>
+        </div>
+    @endif
+
     @php
-        $totalPeserta = count($semuaPeserta);
-        $totalSudah = count($sudahDinilai);
-        $totalBelum = $totalPeserta - $totalSudah;
-        $persen = $totalPeserta > 0 ? round(($totalSudah / $totalPeserta) * 100) : 0;
+        $totalPeserta = $semuaPeserta->count();
+        $totalSudah   = count($sudahDinilai);
+        $totalBelum   = max($totalPeserta - $totalSudah, 0);
+        $persen       = $totalPeserta > 0 ? round(($totalSudah / $totalPeserta) * 100) : 0;
     @endphp
 
     {{-- STAT CARDS --}}
@@ -42,7 +70,7 @@
             <div class="flex items-center gap-4">
                 <div class="flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
                     <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
                     </svg>
                 </div>
@@ -57,7 +85,7 @@
             <div class="flex items-center gap-4">
                 <div class="flex h-12 w-12 items-center justify-center rounded-full bg-orange-100">
                     <svg class="h-6 w-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                 </div>
@@ -102,7 +130,8 @@
                 <h3 class="text-base font-bold text-gray-800">Peserta Terbaru</h3>
                 <p class="text-xs text-gray-500 mt-0.5">5 peserta terakhir</p>
             </div>
-            <a href="{{ route('peserta.penilaian') }}" class="flex items-center gap-1 text-sm font-semibold text-blue-600 hover:underline">
+            <a href="{{ route('peserta.penilaian', $isBoth ? ['tipe' => $tipePenguji] : []) }}"
+               class="flex items-center gap-1 text-sm font-semibold text-blue-600 hover:underline">
                 Lihat Semua Peserta
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -123,40 +152,62 @@
                     </tr>
                 </thead>
                 <tbody class="text-gray-700">
-                    @foreach ($pesertaTerbaru as $i => $p)
+                    @forelse ($pesertaTerbaru as $i => $p)
                         @php
-                            $isSudahDinilai = in_array($p[0], $sudahDinilai);
+                            // ✅ Cek by ID (bukan by nama) — konsisten dengan DB
+                            $isSudahDinilai = in_array($p->id, $sudahDinilai);
                         @endphp
                         <tr class="border-b border-gray-100 hover:bg-gray-50">
                             <td class="px-4 py-3">{{ $i + 1 }}</td>
-                            <td class="px-4 py-3 font-medium">{{ $p[0] }}</td>
-                            <td class="px-4 py-3">{{ $p[1] }}</td>
-                            <td class="px-4 py-3">{{ $p[2] }}</td>
+                            <td class="px-4 py-3 font-medium">{{ $p->nama }}</td>
+                            <td class="px-4 py-3">{{ $p->instansi }}</td>
+                            <td class="px-4 py-3">{{ $p->jabatan }}</td>
                             <td class="px-4 py-3">
                                 @if ($isSudahDinilai)
-                                    <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">Sudah Dinilai</span>
+                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+                                        <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                                        </svg>
+                                        Sudah Dinilai
+                                    </span>
                                 @else
-                                    <span class="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600">Belum Dinilai</span>
+                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600">
+                                        Belum Dinilai
+                                    </span>
                                 @endif
                             </td>
                             <td class="px-4 py-3 text-center">
-                                <a href="{{ route('peserta.penilaian') }}?buka={{ urlencode($p[0]) }}"
-                                   class="inline-block rounded-lg px-4 py-1.5 text-xs font-semibold 
-                                          {{ $isSudahDinilai 
-                                             ? 'bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-50' 
+                                @php
+                                    $urlPenilaian = route('peserta.penilaian', $isBoth ? ['tipe' => $tipePenguji] : []);
+                                @endphp
+                                <a href="{{ $urlPenilaian }}?buka={{ urlencode($p->nama) }}"
+                                   class="inline-block rounded-lg px-4 py-1.5 text-xs font-semibold
+                                          {{ $isSudahDinilai
+                                             ? 'bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-50'
                                              : 'bg-blue-600 text-white hover:bg-blue-700' }}">
                                     {{ $isSudahDinilai ? 'Lihat' : 'Nilai' }}
                                 </a>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="6" class="px-4 py-12 text-center text-gray-400">
+                                <svg class="mx-auto mb-3 h-12 w-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                                Belum ada peserta yang ditugaskan ke Anda
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
 
         <div class="mt-4 flex items-center justify-between">
-            <p class="text-xs text-gray-500">Menampilkan {{ count($pesertaTerbaru) }} dari {{ $totalPeserta }} peserta</p>
-            <a href="{{ route('peserta.penilaian') }}" class="flex items-center gap-1 text-xs font-semibold text-blue-600 hover:underline">
+            <p class="text-xs text-gray-500">Menampilkan {{ $pesertaTerbaru->count() }} dari {{ $totalPeserta }} peserta</p>
+            <a href="{{ route('peserta.penilaian', $isBoth ? ['tipe' => $tipePenguji] : []) }}"
+               class="flex items-center gap-1 text-xs font-semibold text-blue-600 hover:underline">
                 Lihat semua peserta
                 <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
