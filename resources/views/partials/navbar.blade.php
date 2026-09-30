@@ -1,4 +1,13 @@
 {{-- ================= NAVBAR PENILAI ================= --}}
+@php
+    // ✅ Ambil email dari DB (paling reliable) — fallback ke session
+    $emailLogin = session('email_penguji') ?? session('email');
+    if (!$emailLogin && session('user_id')) {
+        $emailLogin = \App\Models\LoginPenguji::where('id', session('user_id'))->value('email');
+    }
+    $emailLogin = $emailLogin ?: '-';
+@endphp
+
 <header class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-gray-200 bg-white/95 backdrop-blur-sm px-4 sm:px-6 shadow-sm">
 
     {{-- KIRI: Hamburger + Breadcrumb --}}
@@ -37,7 +46,7 @@
                 </div>
                 <div class="hidden text-left sm:block">
                     <p class="text-sm font-bold text-gray-800 truncate max-w-[160px]">
-                        {{ session('nama_penguji', 'Dr. Muhammad Aswad, M.Si') }}
+                        {{ session('nama_penguji', 'Penguji') }}
                     </p>
                     <p class="text-xs text-gray-500">
                         @if (session('role') === 'admin')
@@ -59,13 +68,12 @@
 
                 {{-- Header --}}
                 <div class="border-b border-gray-100 px-4 py-3">
-                    <p class="text-sm font-bold text-gray-800">{{ session('nama_penguji', 'Pengguna') }}</p>
+                    <p class="text-sm font-bold text-gray-800">
+                        {{ session('nama_penguji', 'Pengguna') }}
+                    </p>
                     <p class="text-xs text-gray-500 truncate">
-                        @if (session('role') === 'admin')
-                            admin@lanri.go.id
-                        @else
-                            aswad@lanri.go.id
-                        @endif
+                        {{-- ✅ Email dari DB / session --}}
+                        {{ $emailLogin }}
                     </p>
                 </div>
 
