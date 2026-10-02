@@ -102,6 +102,7 @@
 
         @foreach ($byUnit as $unit => $groups)
             <div class="mb-6 rounded-xl bg-white shadow-sm overflow-hidden animate-fade-up">
+                {{-- HEADER UNIT --}}
                 <div class="border-b border-gray-200 bg-purple-50 px-5 py-4">
                     <h2 class="text-base font-bold text-purple-800">{{ $unit }}</h2>
                     <p class="text-xs text-purple-600 mt-0.5">
@@ -112,14 +113,17 @@
 
                 <div class="overflow-x-auto scrollbar-thin">
                     <table class="w-full text-xs border-collapse">
+                        {{-- HEADER TABEL --}}
                         <thead>
-                            <tr class="bg-gray-50 border-b border-gray-200">
-                                <th class="px-3 py-3 text-left font-semibold text-gray-600 border-r border-gray-200">Tipe Ujian</th>
-                                <th class="px-3 py-3 text-left font-semibold text-gray-600 border-r border-gray-200">Jenis Kompetensi</th>
-                                <th class="px-3 py-3 text-left font-semibold text-gray-600 border-r border-gray-200">Elemen Kompetensi</th>
-                                <th class="px-3 py-3 text-center font-semibold text-gray-600 border-r border-gray-200 w-24">Nilai P1</th>
-                                <th class="px-3 py-3 text-center font-semibold text-gray-600 border-r border-gray-200 w-24">Nilai P2</th>
-                                <th class="px-3 py-3 text-center font-semibold text-gray-600 w-28">Rata-rata</th>
+                            <tr class="bg-gray-100 border-b-2 border-gray-300">
+                                <th class="px-3 py-3 text-center font-bold text-gray-700 border-r border-gray-300 w-32">Judul Unit Kompetensi</th>
+                                <th class="px-3 py-3 text-center font-bold text-gray-700 border-r border-gray-300 w-36">Jenis Kompetensi</th>
+                                <th class="px-3 py-3 text-center font-bold text-gray-700 border-r border-gray-300">Elemen Kompetensi</th>
+                                <th class="px-3 py-3 text-center font-bold text-gray-700 border-r border-gray-300 w-24">Nilai P1</th>
+                                <th class="px-3 py-3 text-center font-bold text-gray-700 border-r border-gray-300 w-24">Nilai P2</th>
+                                <th class="px-3 py-3 text-center font-bold text-gray-700 border-r border-gray-300 w-24">Rata-rata</th>
+                                <th class="px-3 py-3 text-center font-bold text-gray-700 border-r border-gray-300 w-24">Nilai Final</th>
+                                <th class="px-3 py-3 text-center font-bold text-gray-700 w-28">Keterangan</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -127,85 +131,135 @@
                                 @php
                                     $jumlahElemen = count($g['elemen']);
                                     $isWawancara = $g['tipe_ujian'] === 'Wawancara';
+                                    $tipeKey = $isWawancara ? 'wawancara' : 'tertulis';
 
+                                    // ✅ Ambil penilai berdasarkan urutan di collection (bukan where('urutan', N))
+                                    // Ini supaya tetap ambil penilai PERTAMA meskipun urutan di DB bukan 1.
                                     if ($isWawancara) {
-                                        $p1 = $penugasanWawancara->where('urutan', 1)->first();
-                                        $p2 = $penugasanWawancara->where('urutan', 2)->first();
+                                        $p1 = $penugasanWawancara->get(0);   // penilai pertama
+                                        $p2 = $penugasanWawancara->get(1);   // penilai kedua
                                     } else {
-                                        $p1 = $penugasanTertulis->where('urutan', 1)->first();
-                                        $p2 = $penugasanTertulis->where('urutan', 2)->first();
+                                        $p1 = $penugasanTertulis->get(0);    // penilai pertama
+                                        $p2 = $penugasanTertulis->get(1);    // penilai kedua (kalau ada)
                                     }
+
+                                    $nilaiFinalJenis = $g['nilai_final'];
+                                    $rataRataJenis = $g['rata_rata_jenis'];
                                 @endphp
 
+                                {{-- BARIS ELEMEN --}}
                                 @foreach ($g['elemen'] as $idx => $e)
-                                    <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <tr class="border-b border-gray-200 hover:bg-gray-50">
                                         @if ($idx === 0)
-                                            <td rowspan="{{ $jumlahElemen }}" class="px-3 py-3 font-semibold text-gray-700 border-r border-gray-200 align-middle text-center">
-                                                <div class="{{ $isWawancara ? 'text-blue-700' : 'text-purple-700' }}">
-                                                    {{ $g['tipe_ujian'] }}
-                                                </div>
-                                                <div class="text-[10px] text-gray-500">({{ $g['bobot_tipe_ujian'] }}%)</div>
+                                            {{-- Kolom Tipe Ujian --}}
+                                            <td rowspan="{{ $jumlahElemen }}" class="px-3 py-3 font-semibold text-gray-800 border-r border-gray-300 align-middle text-center {{ $isWawancara ? 'bg-blue-50' : 'bg-purple-50' }}">
+                                                <div>{{ $g['tipe_ujian'] }}</div>
+                                                <div class="text-[10px] text-gray-600">({{ $g['bobot_tipe_ujian'] }}%)</div>
                                             </td>
-                                            <td rowspan="{{ $jumlahElemen }}" class="px-3 py-3 font-semibold text-gray-700 border-r border-gray-200 align-middle text-center">
+                                            {{-- Kolom Jenis Kompetensi --}}
+                                            <td rowspan="{{ $jumlahElemen }}" class="px-3 py-3 font-semibold text-gray-800 border-r border-gray-300 align-middle text-center">
                                                 <div>{{ $g['jenis_kompetensi'] }}</div>
-                                                <div class="text-[10px] text-gray-500">({{ $g['bobot_kompetensi'] }}%)</div>
+                                                <div class="text-[10px] text-gray-600">({{ $g['bobot_kompetensi'] }}%)</div>
                                             </td>
                                         @endif
 
-                                        <td class="px-3 py-3 text-gray-700 border-r border-gray-200">
+                                        {{-- Kolom Elemen --}}
+                                        <td class="px-3 py-3 text-gray-700 border-r border-gray-300">
                                             {{ $e['nama_elemen'] }}
                                         </td>
 
-                                        {{-- NILAI P1 --}}
-                                        <td class="px-2 py-2 text-center border-r border-gray-200">
+                                        {{-- ✅ Kolom Nilai P1 (SELALU EDITABLE kalau ada P1) --}}
+                                        <td class="px-2 py-2 text-center border-r border-gray-300">
                                             @if ($p1)
                                                 <input type="number"
-                                                       name="nilai[{{ $p1->penilai_id }}][{{ $isWawancara ? 'wawancara' : 'tertulis' }}][{{ $e['urutan'] }}]"
+                                                       name="nilai[{{ $p1->penilai_id }}][{{ $tipeKey }}][{{ $e['urutan'] }}]"
                                                        value="{{ $e['nilai_p1'] !== null ? number_format($e['nilai_p1'], 2, '.', '') : '' }}"
                                                        step="0.01" min="0" max="100"
-                                                       class="input-nilai-p1 w-20 rounded-lg border border-blue-300 bg-blue-50/40 px-2 py-1.5 text-center text-sm font-bold text-blue-700
+                                                       class="input-nilai-p1 w-16 rounded-lg border border-blue-300 bg-blue-50/40 px-2 py-1 text-center text-xs font-bold text-blue-700
                                                               focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
                                                        placeholder="—">
                                                 <p class="text-[9px] text-blue-600 mt-0.5 truncate max-w-[100px] mx-auto">
                                                     {{ $p1->penilai->nama ?? '-' }}
                                                 </p>
                                             @else
-                                                <span class="text-gray-400 italic text-[10px]">—</span>
+                                                <span class="text-gray-400 italic text-[10px]">Tidak ada penilai</span>
                                             @endif
                                         </td>
 
-                                        {{-- NILAI P2 --}}
-                                        <td class="px-2 py-2 text-center border-r border-gray-200">
+                                        {{-- ✅ Kolom Nilai P2 (kalau tidak ada P2 → kosong dengan keterangan) --}}
+                                        <td class="px-2 py-2 text-center border-r border-gray-300">
                                             @if ($p2)
                                                 <input type="number"
-                                                       name="nilai[{{ $p2->penilai_id }}][{{ $isWawancara ? 'wawancara' : 'tertulis' }}][{{ $e['urutan'] }}]"
+                                                       name="nilai[{{ $p2->penilai_id }}][{{ $tipeKey }}][{{ $e['urutan'] }}]"
                                                        value="{{ $e['nilai_p2'] !== null ? number_format($e['nilai_p2'], 2, '.', '') : '' }}"
                                                        step="0.01" min="0" max="100"
-                                                       class="input-nilai-p2 w-20 rounded-lg border border-green-300 bg-green-50/40 px-2 py-1.5 text-center text-sm font-bold text-green-700
+                                                       class="input-nilai-p2 w-16 rounded-lg border border-green-300 bg-green-50/40 px-2 py-1 text-center text-xs font-bold text-green-700
                                                               focus:border-green-500 focus:ring-2 focus:ring-green-200 focus:outline-none"
                                                        placeholder="—">
                                                 <p class="text-[9px] text-green-600 mt-0.5 truncate max-w-[100px] mx-auto">
                                                     {{ $p2->penilai->nama ?? '-' }}
                                                 </p>
                                             @else
-                                                <span class="text-gray-400 italic text-[10px]">—</span>
+                                                <div class="text-[9px] text-gray-400 italic">
+                                                    @if ($isWawancara)
+                                                        Belum ada P2
+                                                    @else
+                                                        (1 Penilai)
+                                                    @endif
+                                                </div>
                                             @endif
                                         </td>
 
-                                        {{-- RATA-RATA --}}
-                                        <td class="px-2 py-2 text-center">
-                                            <span class="rata-rata-edit inline-block rounded-lg bg-gray-100 px-2 py-1.5 text-sm font-bold text-gray-800 w-20">
+                                        {{-- Kolom Rata-rata --}}
+                                        <td class="px-2 py-2 text-center font-semibold text-gray-800 border-r border-gray-300">
+                                            <span class="rata-rata-edit inline-block rounded-lg bg-gray-100 px-2 py-1 text-xs font-bold text-gray-800 w-16">
                                                 {{ $e['rata_rata_elemen'] !== null ? number_format($e['rata_rata_elemen'], 2, ',', '.') : '—' }}
                                             </span>
                                         </td>
+
+                                        {{-- Nilai Final — hanya di baris pertama --}}
+                                        @if ($idx === 0)
+                                            <td rowspan="{{ $jumlahElemen }}" class="px-2 py-2 text-center align-middle font-bold text-gray-800 border-r border-gray-300 bg-gray-50 text-sm">
+                                                {{ $nilaiFinalJenis !== null ? number_format($nilaiFinalJenis, 2, ',', '.') : '0,00' }}
+                                            </td>
+                                            <td rowspan="{{ $jumlahElemen }}" class="px-2 py-2 border-r border-gray-300"></td>
+                                        @endif
                                     </tr>
                                 @endforeach
+
+                                {{-- BARIS RATA-RATA JENIS --}}
+                                <tr class="bg-yellow-50 border-b-2 border-gray-300">
+                                    <td colspan="4" class="px-2 py-2 text-right text-[10px] font-bold text-gray-700 border-r border-gray-300">
+                                        Rata-rata {{ $g['jenis_kompetensi'] }} ({{ $g['jumlah_elemen'] }} elemen)
+                                    </td>
+                                    <td class="px-2 py-2 text-center font-bold text-gray-800 border-r border-gray-300">
+                                        {{ $rataRataJenis !== null ? number_format($rataRataJenis, 2, ',', '.') : '0,00' }}
+                                    </td>
+                                    <td class="px-2 py-2 border-r border-gray-300"></td>
+                                    <td class="px-2 py-2 border-r border-gray-300"></td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
             </div>
         @endforeach
+
+        {{-- INFO PENUGASAN TERTULIS (DEBUG) --}}
+        @if ($penugasanTertulis->count() == 0 && $isPerpindahan)
+            <div class="mb-6 rounded-xl bg-red-50 border-2 border-red-300 p-4 animate-fade-up">
+                <div class="flex items-start gap-3">
+                    <svg class="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <div class="text-xs text-red-800">
+                        <p class="font-bold">⚠️ Belum Ada Penugasan Penilai Tertulis</p>
+                        <p class="mt-1">Peserta ini adalah <strong>Perpindahan Jabatan</strong>, tapi belum ada penugasan penilai Tertulis. Silakan tugaskan penilai Tertulis terlebih dahulu di menu <strong>Penugasan Penilai</strong>, agar nilai Tertulis bisa diinput.</p>
+                    </div>
+                </div>
+            </div>
+        @endif
 
         {{-- EDIT CATATAN PENGUJI --}}
         <div class="mb-6 rounded-xl bg-white shadow-sm border-2 border-amber-300 overflow-hidden animate-fade-up">
@@ -252,6 +306,12 @@
                                   placeholder="Catatan penguji tertulis...">{{ $penilaian?->catatan ?? '' }}</textarea>
                     </div>
                 @endforeach
+
+                @if ($penugasanWawancara->count() == 0 && $penugasanTertulis->count() == 0)
+                    <div class="text-center text-xs text-gray-400 italic py-4">
+                        Belum ada penilai yang ditugaskan untuk peserta ini.
+                    </div>
+                @endif
             </div>
         </div>
 

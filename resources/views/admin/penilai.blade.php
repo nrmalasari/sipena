@@ -93,8 +93,8 @@
         </div>
     </div>
 
-    {{-- SEARCH & FILTER --}}
-    <form method="GET" action="{{ route('admin.penilai') }}" class="animate-fade-up delay-200 mb-6">
+    {{-- ============ SEARCH & FILTER ============ --}}
+    <form method="GET" action="{{ route('admin.penilai') }}" id="formFilter" class="animate-fade-up delay-200 mb-6">
         <div class="flex flex-col gap-3 lg:flex-row">
 
             <div class="relative flex-1">
@@ -110,7 +110,10 @@
                               focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none">
             </div>
 
-            <select name="jenis" class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-700 
+            {{-- ✅ Jenis Penilaian --}}
+            <select name="jenis"
+                    onchange="document.getElementById('formFilter').submit()"
+                    class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-700 
                            focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none lg:w-56">
                 <option value="">Semua Jenis Penilaian</option>
                 <option value="wawancara" {{ request('jenis') === 'wawancara' ? 'selected' : '' }}>Wawancara</option>
@@ -118,7 +121,10 @@
                 <option value="keduanya"  {{ request('jenis') === 'keduanya' ? 'selected' : '' }}>Wawancara & Tertulis</option>
             </select>
 
-            <select name="instansi" class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-700 
+            {{-- ✅ Instansi --}}
+            <select name="instansi"
+                    onchange="document.getElementById('formFilter').submit()"
+                    class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-700 
                            focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none lg:w-48">
                 <option value="">Semua Instansi</option>
                 @foreach ($daftarInstansi as $inst)
@@ -126,13 +132,27 @@
                 @endforeach
             </select>
 
-            <select name="status" class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-700 
+            {{-- ✅ Status --}}
+            <select name="status"
+                    onchange="document.getElementById('formFilter').submit()"
+                    class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-700 
                            focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none lg:w-40">
                 <option value="">Semua Status</option>
                 <option value="aktif"    {{ request('status') === 'aktif' ? 'selected' : '' }}>Aktif</option>
                 <option value="nonaktif" {{ request('status') === 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
             </select>
 
+            {{-- ✅ Tombol Filter --}}
+            <button type="submit"
+                    class="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                          d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                </svg>
+                Filter
+            </button>
+
+            {{-- ✅ Tombol Reset --}}
             <a href="{{ route('admin.penilai') }}"
                class="flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-600 transition hover:bg-gray-50 lg:w-auto">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

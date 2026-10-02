@@ -221,7 +221,6 @@ class AdminPenilaianController extends Controller
        ========================================================= */
     public function index(Request $request)
     {
-        // Sync status semua peserta dulu (biar list akurat)
         Peserta::chunk(100, function ($pesertas) {
             foreach ($pesertas as $p) {
                 $this->syncStatusPeserta($p->id);
@@ -242,7 +241,6 @@ class AdminPenilaianController extends Controller
 
         $pesertaList = $query->latest()->paginate(10)->withQueryString();
 
-        // Hitung nilai final per peserta
         foreach ($pesertaList as $p) {
             $p->nilai_wawancara = Penilaian::where('peserta_id', $p->id)
                 ->where('tipe', 'wawancara')->whereNotNull('nilai')->avg('nilai');
@@ -284,19 +282,14 @@ class AdminPenilaianController extends Controller
        ========================================================= */
     public function show($pesertaId, Request $request)
     {
-        // ✅ SYNC STATUS DULU sebelum query
         $this->syncStatusPeserta($pesertaId);
 
-        // Ambil peserta (fresh dari DB)
         $peserta = Peserta::with(['penugasanPenilais.penilai'])->findOrFail($pesertaId);
 
         $data = $this->hitungPenilaian($pesertaId, $peserta);
 
-        // Auto-save nilai final ke DB
         $this->simpanNilaiFinalKeDb($pesertaId, $data);
 
-        // ✅✅✅ AMBIL SEMUA CATATAN PENGUJI (Wawancara + Tertulis) ✅✅✅
-        // Hanya yang sudah selesai / ada catatannya
         $semuaCatatan = Penilaian::where('peserta_id', $pesertaId)
             ->whereNotNull('catatan')
             ->where('catatan', '!=', '')
@@ -312,7 +305,7 @@ class AdminPenilaianController extends Controller
     }
 
     /* =========================================================
-       ✅✅✅ FORM EDIT NILAI PENGUJI (BARU) ✅✅✅
+       FORM EDIT NILAI PENGUJI
        ========================================================= */
     public function edit($pesertaId)
     {
@@ -321,17 +314,18 @@ class AdminPenilaianController extends Controller
 
         $data = $this->hitungPenilaian($pesertaId, $peserta);
 
+        // ✅ AMBIL SEMUA PENUGASAN (tanpa orderBy urutan — supaya aman kalau urutan NULL)
         $penugasanWawancara = PenugasanPenilai::with('penilai')
             ->where('peserta_id', $pesertaId)
             ->where('tipe', 'wawancara')
-            ->orderBy('urutan')
-            ->get();
+            ->get()
+            ->values(); // reset index
 
         $penugasanTertulis = PenugasanPenilai::with('penilai')
             ->where('peserta_id', $pesertaId)
             ->where('tipe', 'tertulis')
-            ->orderBy('urutan')
-            ->get();
+            ->get()
+            ->values();
 
         $nilaiMentah = PenilaianDetail::where('peserta_id', $pesertaId)
             ->get()
@@ -349,7 +343,7 @@ class AdminPenilaianController extends Controller
     }
 
     /* =========================================================
-       ✅✅✅ SIMPAN UPDATE NILAI PENGUJI (BARU) ✅✅✅
+       SIMPAN UPDATE NILAI PENGUJI
        ========================================================= */
     public function updateNilai(Request $request, $pesertaId)
     {
@@ -478,10 +472,9 @@ class AdminPenilaianController extends Controller
 
             foreach ($groups as $g) {
                 $jumlah = count($g['elemen']);
-                $keyGrup = $unit . '|' . $g['tipe_ujian'] . '|' . $g['jenis_kompetensi'];
-                $override = $data['overrides'][$keyGrup] ?? null;
-                $rataRataJenis = $override?->rata_rata_override ?? $g['rata_rata_jenis'];
-                $nilaiFinalJenis = $override?->nilai_final_override ?? $g['nilai_final'];
+                $keyGrup = $unit . '|' . $g['jenis_kompetensi'];
+                $rataRataJenis = $g['rata_rata_jenis'];
+                $nilaiFinalJenis = $g['nilai_final'];
 
                 foreach ($g['elemen'] as $idx => $e) {
                     echo '<tr>';
@@ -505,7 +498,7 @@ class AdminPenilaianController extends Controller
                 echo '<td colspan="4" style="text-align:right;">Rata-rata ' . $g['jenis_kompetensi'] . ':</td>';
                 echo '<td colspan="2" style="text-align:center;">' . $jumlah . ' elemen</td>';
                 echo '<td style="text-align:center;">' . number_format($rataRataJenis ?? 0, 2, ',', '.') . '</td>';
-                echo '<td style="text-align:center;">× ' . $g['bobot_kompetensi'] . '% × ' . $g['bobot_tipe_ujian'] . '% = ' . number_format($nilaiFinalJenis ?? 0, 2, ',', '.') . '</td>';
+                echo '<td style="text-align:center;">' . number_format($nilaiFinalJenis ?? 0, 2, ',', '.') . '</td>';
                 echo '</tr>';
             }
         }
@@ -558,15 +551,21 @@ class AdminPenilaianController extends Controller
             ? $this->strukturPerpindahanJabatan()
             : $this->strukturKenaikanJenjang();
 
-        // Penilai wawancara
+        // ==========================================================
+        // ✅ AMBIL PENUGASAN — TANPA orderBy urutan (biar aman)
+        // ==========================================================
         $penugasanWawancara = PenugasanPenilai::with('penilai')
             ->where('peserta_id', $pesertaId)
             ->where('tipe', 'wawancara')
-            ->orderBy('urutan')
-            ->get();
+            ->get()
+            ->values();
 
-        $p1Wawancara = $penugasanWawancara->where('urutan', 1)->first()?->penilai;
-        $p2Wawancara = $penugasanWawancara->where('urutan', 2)->first()?->penilai;
+        // ✅ P1 & P2 = element ke-0 dan ke-1 (bukan where urutan)
+        $penugasanW1 = $penugasanWawancara->get(0);
+        $penugasanW2 = $penugasanWawancara->get(1);
+
+        $p1Wawancara = $penugasanW1?->penilai;
+        $p2Wawancara = $penugasanW2?->penilai;
 
         $detailP1Wawancara = $p1Wawancara
             ? PenilaianDetail::where('peserta_id', $pesertaId)
@@ -592,11 +591,14 @@ class AdminPenilaianController extends Controller
             $penugasanTertulis = PenugasanPenilai::with('penilai')
                 ->where('peserta_id', $pesertaId)
                 ->where('tipe', 'tertulis')
-                ->orderBy('urutan')
-                ->get();
+                ->get()
+                ->values();
 
-            $p1Tertulis = $penugasanTertulis->where('urutan', 1)->first()?->penilai;
-            $p2Tertulis = $penugasanTertulis->where('urutan', 2)->first()?->penilai;
+            $penugasanT1 = $penugasanTertulis->get(0);
+            $penugasanT2 = $penugasanTertulis->get(1);
+
+            $p1Tertulis = $penugasanT1?->penilai;
+            $p2Tertulis = $penugasanT2?->penilai;
 
             $detailP1Tertulis = $p1Tertulis
                 ? PenilaianDetail::where('peserta_id', $pesertaId)
@@ -613,7 +615,9 @@ class AdminPenilaianController extends Controller
                 : collect();
         }
 
-        // Bangun struktur
+        // ==========================================================
+        // ✅ BANGUN STRUKTUR + HITUNG RATA-RATA PER JENIS
+        // ==========================================================
         $struktur = [];
         foreach ($strukturMentah as $g) {
             $dP1 = $g['tipe_ujian'] === 'Wawancara' ? $detailP1Wawancara : $detailP1Tertulis;
@@ -652,10 +656,6 @@ class AdminPenilaianController extends Controller
                 ? array_sum($nilaiRataArr) / count($nilaiRataArr)
                 : null;
 
-            $nilaiFinal = $rataRataJenis !== null
-                ? $rataRataJenis * ($g['bobot_kompetensi'] / 100) * ($g['bobot_tipe_ujian'] / 100)
-                : null;
-
             $struktur[] = [
                 'judul_unit'       => $g['judul_unit'],
                 'tipe_ujian'       => $g['tipe_ujian'],
@@ -665,17 +665,82 @@ class AdminPenilaianController extends Controller
                 'elemen'           => $elemenData,
                 'jumlah_elemen'    => count($nilaiRataArr),
                 'rata_rata_jenis'  => $rataRataJenis,
-                'nilai_final'      => $nilaiFinal,
+                'nilai_final'      => null,
             ];
         }
 
-        // Total per unit
+        // ==========================================================
+        // ✅ HITUNG NILAI FINAL
+        // - WAWANCARA: rata-rata × bobot_kompetensi (per jenis)
+        // - TERTULIS: rata-rata gabungan × bobot_tipe_ujian (per unit)
+        // ==========================================================
+        $groupByUnitTipe = [];
+        foreach ($struktur as $idx => $g) {
+            $key = $g['judul_unit'] . '|' . $g['tipe_ujian'];
+            $groupByUnitTipe[$key][] = $idx;
+        }
+
+        foreach ($groupByUnitTipe as $key => $indexes) {
+            $tipeUjian = $struktur[$indexes[0]]['tipe_ujian'];
+
+            if ($tipeUjian === 'Wawancara') {
+                foreach ($indexes as $idx) {
+                    $g = $struktur[$idx];
+                    $struktur[$idx]['nilai_final'] = $g['rata_rata_jenis'] !== null
+                        ? $g['rata_rata_jenis'] * ($g['bobot_kompetensi'] / 100)
+                        : null;
+                }
+            } else {
+                $totalNilai = 0;
+                $totalElemen = 0;
+                foreach ($indexes as $idx) {
+                    foreach ($struktur[$idx]['elemen'] as $e) {
+                        if ($e['rata_rata_elemen'] !== null) {
+                            $totalNilai += $e['rata_rata_elemen'];
+                            $totalElemen++;
+                        }
+                    }
+                }
+
+                $rataRataGabungan = $totalElemen > 0 ? $totalNilai / $totalElemen : null;
+                $bobotTipe = $struktur[$indexes[0]]['bobot_tipe_ujian'];
+
+                $nilaiFinalTertulis = $rataRataGabungan !== null
+                    ? $rataRataGabungan * ($bobotTipe / 100)
+                    : null;
+
+                foreach ($indexes as $idx) {
+                    $struktur[$idx]['nilai_final'] = $nilaiFinalTertulis;
+                }
+            }
+        }
+
+        // ==========================================================
+        // ✅ TOTAL PER UNIT
+        // - WAWANCARA → tambahkan SETIAP grup
+        // - TERTULIS  → tambahkan HANYA SEKALI per unit
+        // ==========================================================
         $totalPerUnit = [];
+        $tertulisSudahDihitung = [];
+
         foreach ($struktur as $g) {
             $unit = $g['judul_unit'];
+            $tipe = $g['tipe_ujian'];
+
             if (!isset($totalPerUnit[$unit])) $totalPerUnit[$unit] = 0;
-            if ($g['nilai_final'] !== null) {
-                $totalPerUnit[$unit] += $g['nilai_final'];
+
+            if ($tipe === 'Tertulis') {
+                if (in_array($unit, $tertulisSudahDihitung)) {
+                    continue;
+                }
+                if ($g['nilai_final'] !== null) {
+                    $totalPerUnit[$unit] += $g['nilai_final'];
+                    $tertulisSudahDihitung[] = $unit;
+                }
+            } else {
+                if ($g['nilai_final'] !== null) {
+                    $totalPerUnit[$unit] += $g['nilai_final'];
+                }
             }
         }
 

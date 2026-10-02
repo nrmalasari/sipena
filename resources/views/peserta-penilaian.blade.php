@@ -52,7 +52,8 @@
     {{-- ============ DAFTAR PESERTA ============ --}}
     <div id="sectionDaftar" class="animate-fade-up delay-100">
 
-        <div class="mb-6 flex flex-col gap-3 sm:flex-row">
+        {{-- SEARCH & FILTER --}}
+        <div class="mb-6 flex flex-col gap-3 lg:flex-row">
             <div class="relative flex-1">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -64,6 +65,29 @@
                        class="w-full rounded-lg border border-gray-300 bg-white py-2.5 pl-10 pr-4 text-sm text-gray-700
                               focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none">
             </div>
+
+            <select id="filterJenis" class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-700
+                       focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none lg:w-56">
+                <option value="">Semua Jenis Penilaian</option>
+                <option value="perpindahan_jabatan">Perpindahan Jabatan</option>
+                <option value="kenaikan_jenjang">Kenaikan Jenjang</option>
+            </select>
+
+            <select id="filterStatus" class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-700
+                       focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none lg:w-48">
+                <option value="">Semua Status</option>
+                <option value="sudah">Sudah Dinilai</option>
+                <option value="belum">Belum Dinilai</option>
+            </select>
+
+            <button type="button" onclick="resetFilter()"
+                    class="flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-600 transition hover:bg-gray-50">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+                Reset
+            </button>
         </div>
 
         <div class="rounded-xl bg-white shadow-sm">
@@ -75,18 +99,38 @@
                             <th class="px-6 py-4 font-semibold text-gray-600">Nama Peserta</th>
                             <th class="px-6 py-4 font-semibold text-gray-600">Instansi</th>
                             <th class="px-6 py-4 font-semibold text-gray-600">Jabatan</th>
+                            <th class="px-6 py-4 font-semibold text-gray-600">Jenis Penilaian</th>
                             <th class="px-6 py-4 font-semibold text-gray-600">Status</th>
                             <th class="px-6 py-4 text-center font-semibold text-gray-600">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="text-gray-700" id="tbodyPeserta">
                         @forelse ($peserta as $i => $p)
-                            @php $isSudahDinilai = in_array($p->id, $sudahDinilai); @endphp
-                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                            @php
+                                $isSudahDinilai = in_array($p->id, $sudahDinilai);
+                                $jenis = $p->jenis_penilaian ?? 'kenaikan_jenjang';
+                            @endphp
+                            <tr class="border-b border-gray-100 hover:bg-gray-50"
+                                data-nama="{{ strtolower($p->nama) }}"
+                                data-jenis="{{ $jenis }}"
+                                data-status="{{ $isSudahDinilai ? 'sudah' : 'belum' }}">
                                 <td class="px-6 py-4 text-gray-500">{{ $i + 1 }}</td>
                                 <td class="px-6 py-4 font-semibold text-gray-800">{{ $p->nama }}</td>
                                 <td class="px-6 py-4 text-gray-600">{{ $p->instansi }}</td>
                                 <td class="px-6 py-4 text-gray-600">{{ $p->jabatan }}</td>
+
+                                <td class="px-6 py-4">
+                                    @if ($jenis === 'perpindahan_jabatan')
+                                        <span class="inline-block rounded-full bg-purple-100 px-3 py-1 text-xs font-semibold text-purple-700 whitespace-nowrap">
+                                            Perpindahan Jabatan
+                                        </span>
+                                    @else
+                                        <span class="inline-block rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700 whitespace-nowrap">
+                                            Kenaikan Jenjang
+                                        </span>
+                                    @endif
+                                </td>
+
                                 <td class="px-6 py-4">
                                     @if ($isSudahDinilai)
                                         <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
@@ -124,18 +168,30 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-12 text-center text-gray-400">
+                                <td colspan="7" class="px-6 py-12 text-center text-gray-400">
                                     Belum ada peserta yang ditugaskan untuk Anda
                                 </td>
                             </tr>
                         @endforelse
+
+                        <tr id="emptyFilterRow" class="hidden">
+                            <td colspan="7" class="px-6 py-12 text-center text-gray-400">
+                                Tidak ada peserta yang cocok dengan filter.
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
 
             <div class="flex items-center justify-between border-t border-gray-200 px-6 py-4">
-                <p class="text-xs text-gray-500">Total: {{ $peserta->count() }} peserta</p>
+                <p class="text-xs text-gray-500">
+                    Total: <span id="totalPeserta">{{ $peserta->count() }}</span> peserta
+                </p>
             </div>
+        </div>
+
+        <div class="mt-6 rounded-lg bg-yellow-50 border border-yellow-200 p-3 text-xs text-gray-700 animate-fade-up delay-200">
+            <strong>Passing grade 71,00</strong> adalah nilai minimal kelulusan
         </div>
     </div>
 
@@ -178,7 +234,7 @@
         <input type="hidden" id="inputPesertaId" value="">
         <input type="hidden" id="inputTipe" value="{{ $tipePenguji }}">
 
-        {{-- ============ CARD INFO PESERTA ============ --}}
+        {{-- CARD INFO PESERTA --}}
         <div class="mb-6 rounded-xl bg-white p-5 shadow-sm">
             <div class="flex items-center gap-4">
                 <div class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-slate-100">
@@ -201,6 +257,10 @@
                     <span id="btnLihatBerkasText">Lihat Berkas</span>
                 </button>
             </div>
+        </div>
+
+        <div class="mb-4 rounded-lg bg-yellow-50 border border-yellow-200 p-3 text-xs text-gray-700">
+            <strong>Passing grade 71,00</strong> adalah nilai minimal kelulusan
         </div>
 
         {{-- INDIKATOR AUTO-SAVE --}}
@@ -236,55 +296,68 @@
                 </div>
 
                 <div class="overflow-x-auto scrollbar-thin">
-                    <table class="w-full text-sm">
+                    <table class="w-full text-sm border-collapse">
                         <thead>
-                            <tr class="border-b border-gray-200 bg-gray-50 text-left">
-                                <th class="px-4 py-3 font-semibold text-gray-600">Judul Unit</th>
-                                <th class="px-4 py-3 font-semibold text-gray-600">Jenis</th>
-                                <th class="px-4 py-3 font-semibold text-gray-600">Elemen Kompetensi</th>
-                                <th class="px-4 py-3 text-center font-semibold text-gray-600">Nilai P1 (Anda)</th>
-                                <th class="px-4 py-3 text-center font-semibold text-gray-600">Nilai P2 (Live)</th>
+                            <tr class="border-b border-gray-300 bg-gray-50 text-left">
+                                <th class="px-4 py-3 font-semibold text-gray-600 border-r border-gray-200">Judul Unit Kompetensi</th>
+                                <th class="px-4 py-3 font-semibold text-gray-600 border-r border-gray-200">Jenis Kompetensi</th>
+                                <th class="px-4 py-3 font-semibold text-gray-600 border-r border-gray-200">Elemen Kompetensi</th>
+                                <th class="px-4 py-3 text-center font-semibold text-gray-600 border-r border-gray-200">Nilai P1 (Anda)</th>
+                                <th class="px-4 py-3 text-center font-semibold text-gray-600 border-r border-gray-200">Nilai P2 (Live)</th>
                                 <th class="px-4 py-3 text-center font-semibold text-gray-600">Rata-rata</th>
                             </tr>
                         </thead>
                         <tbody class="text-gray-700">
                             @php
+                                /**
+                                 * Struktur sesuai Excel.
+                                 * Format: [judul_unit, jenis_kompetensi, elemen, urutan, tampil_judul, tampil_jenis]
+                                 * - tampil_judul: true = tampilkan judul unit, false = kosongkan
+                                 * - tampil_jenis: true = tampilkan jenis kompetensi, false = kosongkan
+                                 */
                                 $wawancara = [
-                                    ['Kemampuan Analisis', 'Kompetensi Inti', 'Pengetahuan tentang Bidang Pekerjaan'],
-                                    ['', '', 'Kemampuan menulis dan publikasi'],
-                                    ['Kemampuan Politis', 'Kompetensi Inti', 'Konteks Politik'],
-                                    ['', '', 'Regulasi dan Legislasi'],
-                                    ['', '', 'Komunikasi'],
-                                    ['', '', 'Membangun jejaring'],
-                                    ['', 'Kompetensi Spesialis', 'Presentasi'],
-                                    ['', '', 'Konsultasi Publik'],
-                                    ['', '', 'Partnership'],
-                                    ['Kemampuan Analisis & Politis', 'Kompetensi Dasar', 'Manajemen Diri'],
-                                    ['', '', 'Membangun Tim'],
+                                    // ===== KEMAMPUAN ANALISIS — Kompetensi Inti =====
+                                    ['Kemampuan Analisis', 'Kompetensi Inti', 'Pengetahuan tentang Bidang Pekerjaan', 0, true,  true],
+                                    ['',                   '',                'Kemampuan menulis dan publikasi', 1, false, false],
+
+                                    // ===== KEMAMPUAN POLITIS — Kompetensi Inti =====
+                                    ['Kemampuan Politis', 'Kompetensi Inti', 'Konteks Politik (dinamika politik dan budaya birokrasi)', 2, true,  true],
+                                    ['',                  '',                'Regulasi dan Legislasi', 3, false, false],
+                                    ['',                  '',                'Komunikasi (CV/wawancara)', 4, false, false],
+                                    ['',                  '',                'Membangun jejaring (Networking)', 5, false, false],
+                                    ['',                  '',                'Presentasi (CV/wawancara)', 6, false, false],
+
+                                    // ===== KEMAMPUAN POLITIS — Kompetensi Spesialis =====
+                                    ['', 'Kompetensi Spesialis', 'Konsultasi Publik (CV/wawancara)', 7, false, true],
+                                    ['', '',                      'Partnership (CV/wawancara)', 8, false, false],
+
+                                    // ===== KEMAMPUAN ANALISIS & POLITIS — Kompetensi Dasar =====
+                                    ['Kemampuan Analisis & Politis', 'Kompetensi Dasar', 'Manajemen Diri', 9, true,  true],
+                                    ['',                             '',                 'Membangun Tim', 10, false, false],
                                 ];
                             @endphp
 
-                            @foreach ($wawancara as $i => $k)
-                                <tr class="border-b border-gray-100 hover:bg-gray-50" data-urutan="{{ $i }}">
-                                    <td class="px-4 py-3">
-                                        @if ($k[0])<span class="font-semibold text-gray-800">{{ $k[0] }}</span>@endif
+                            @foreach ($wawancara as $k)
+                                <tr class="border-b border-gray-200 hover:bg-gray-50" data-urutan="{{ $k[3] }}">
+                                    <td class="px-4 py-3 font-semibold text-gray-800 border-r border-gray-200">
+                                        {{ $k[4] ? $k[0] : '' }}
                                     </td>
-                                    <td class="px-4 py-3">
-                                        @if ($k[1])<span class="text-gray-600">{{ $k[1] }}</span>@endif
+                                    <td class="px-4 py-3 text-gray-600 border-r border-gray-200">
+                                        {{ $k[5] ? $k[1] : '' }}
                                     </td>
-                                    <td class="px-4 py-3 text-gray-700">{{ $k[2] }}</td>
-                                    <td class="px-4 py-3 text-center">
+                                    <td class="px-4 py-3 text-gray-700 border-r border-gray-200">{{ $k[2] }}</td>
+                                    <td class="px-4 py-3 text-center border-r border-gray-200">
                                         <input type="number"
-                                               data-urutan="{{ $i }}"
+                                               data-urutan="{{ $k[3] }}"
                                                class="input-nilai w-16 rounded-lg border border-gray-300 px-2 py-1.5 text-center text-sm font-semibold text-blue-700
                                                       focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
                                                min="0" max="100" placeholder="—">
                                     </td>
-                                    <td class="px-4 py-3 text-center">
-                                        <span class="nilai-p2 text-sm font-semibold text-green-700" data-urutan="{{ $i }}">—</span>
+                                    <td class="px-4 py-3 text-center border-r border-gray-200">
+                                        <span class="nilai-p2 text-sm font-semibold text-green-700" data-urutan="{{ $k[3] }}">—</span>
                                     </td>
                                     <td class="px-4 py-3 text-center">
-                                        <span class="rata-rata text-sm font-semibold text-gray-800" data-urutan="{{ $i }}">—</span>
+                                        <span class="rata-rata text-sm font-semibold text-gray-800" data-urutan="{{ $k[3] }}">—</span>
                                     </td>
                                 </tr>
                             @endforeach
@@ -306,38 +379,38 @@
                 </div>
 
                 <div class="overflow-x-auto scrollbar-thin">
-                    <table class="w-full text-sm">
+                    <table class="w-full text-sm border-collapse">
                         <thead>
-                            <tr class="border-b border-gray-200 bg-gray-50 text-left">
-                                <th class="px-4 py-3 font-semibold text-gray-600">Judul Unit</th>
-                                <th class="px-4 py-3 font-semibold text-gray-600">Jenis</th>
-                                <th class="px-4 py-3 font-semibold text-gray-600">Elemen Kompetensi</th>
+                            <tr class="border-b border-gray-300 bg-gray-50 text-left">
+                                <th class="px-4 py-3 font-semibold text-gray-600 border-r border-gray-200">Judul Unit Kompetensi</th>
+                                <th class="px-4 py-3 font-semibold text-gray-600 border-r border-gray-200">Jenis Kompetensi</th>
+                                <th class="px-4 py-3 font-semibold text-gray-600 border-r border-gray-200">Elemen Kompetensi</th>
                                 <th class="px-4 py-3 text-center font-semibold text-gray-600">Nilai Anda</th>
                             </tr>
                         </thead>
                         <tbody class="text-gray-700">
                             @php
                                 $tertulis = [
-                                    ['Kemampuan Analisis', 'Kompetensi Inti', 'Pengetahuan tentang substansi Kebijakan Publik'],
-                                    ['', '', 'Metode Riset'],
-                                    ['', '', 'Teknik dan Analisis Kebijakan'],
-                                    ['', 'Kompetensi Spesialis', 'Penyusunan Saran Kebijakan'],
-                                    ['Kemampuan Politis', 'Kompetensi Inti', 'Regulasi dan Legislasi'],
+                                    ['Kemampuan Analisis', 'Kompetensi Inti', 'Pengetahuan tentang substansi Kebijakan Publik', 0, true,  true],
+                                    ['',                   '',                'Metode Riset', 1, false, false],
+                                    ['',                   '',                'Teknik dan Analisis Kebijakan', 2, false, false],
+                                    ['',                   'Kompetensi Spesialis', 'Penyusunan Saran Kebijakan', 3, false, true],
+                                    ['Kemampuan Politis',  'Kompetensi Inti', 'Regulasi dan Legislasi', 4, true,  true],
                                 ];
                             @endphp
 
-                            @foreach ($tertulis as $i => $k)
-                                <tr class="border-b border-gray-100 hover:bg-gray-50" data-urutan="{{ $i }}">
-                                    <td class="px-4 py-3">
-                                        @if ($k[0])<span class="font-semibold text-gray-800">{{ $k[0] }}</span>@endif
+                            @foreach ($tertulis as $k)
+                                <tr class="border-b border-gray-200 hover:bg-gray-50" data-urutan="{{ $k[3] }}">
+                                    <td class="px-4 py-3 font-semibold text-gray-800 border-r border-gray-200">
+                                        {{ $k[4] ? $k[0] : '' }}
                                     </td>
-                                    <td class="px-4 py-3">
-                                        @if ($k[1])<span class="text-gray-600">{{ $k[1] }}</span>@endif
+                                    <td class="px-4 py-3 text-gray-600 border-r border-gray-200">
+                                        {{ $k[5] ? $k[1] : '' }}
                                     </td>
-                                    <td class="px-4 py-3 text-gray-700">{{ $k[2] }}</td>
+                                    <td class="px-4 py-3 text-gray-700 border-r border-gray-200">{{ $k[2] }}</td>
                                     <td class="px-4 py-3 text-center">
                                         <input type="number"
-                                               data-urutan="{{ $i }}"
+                                               data-urutan="{{ $k[3] }}"
                                                class="input-nilai w-16 rounded-lg border border-gray-300 px-2 py-1.5 text-center text-sm font-semibold text-purple-700
                                                       focus:border-purple-500 focus:ring-2 focus:ring-purple-200 focus:outline-none"
                                                min="0" max="100" placeholder="—">
@@ -372,7 +445,6 @@
                 </div>
 
                 <div class="grid grid-cols-1 {{ $tipePenguji === 'wawancara' ? 'lg:grid-cols-2' : '' }} gap-4">
-                    {{-- Catatan Anda --}}
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-2">
                             <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-2.5 py-0.5 text-[10px] font-bold text-blue-700 uppercase">
@@ -389,7 +461,6 @@
                         </p>
                     </div>
 
-                    {{-- Catatan Rekan (hanya wawancara) --}}
                     @if ($tipePenguji === 'wawancara')
                         <div>
                             <label class="block text-xs font-semibold text-gray-700 mb-2">
@@ -406,14 +477,12 @@
                 </div>
             </div>
 
-            {{-- Tombol Aksi --}}
             <div class="mt-6 flex items-center justify-end gap-3">
                 <button type="button" onclick="kembaliKeDaftar()"
                         class="flex items-center gap-2 rounded-lg border border-gray-300 px-6 py-2.5 text-sm font-semibold text-gray-600 transition hover:bg-gray-50">
                     Batal
                 </button>
 
-                {{-- ✅ TOMBOL DINAMIS: Ganti teks & warna sesuai sudah/belum ada data di DB --}}
                 <button type="button" id="btnSelesaikan" onclick="konfirmasiSelesaikan()"
                         class="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-blue-600/30 transition hover:bg-blue-700">
                     <svg id="btnSelesaikanIcon" class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -421,6 +490,10 @@
                     </svg>
                     <span id="btnSelesaikanText">Selesaikan Penilaian</span>
                 </button>
+            </div>
+
+            <div class="mt-6 rounded-lg bg-yellow-50 border border-yellow-200 p-3 text-xs text-gray-700">
+                <strong>Passing grade 71,00</strong> adalah nilai minimal kelulusan
             </div>
         </div>
     </div>
@@ -434,21 +507,11 @@
     const saveTimers = {};
     let catatanTimer = null;
     let nilaiAsliDariServer = {};
-
-    // ✅ Flag: apakah peserta ini SUDAH ADA DATA di DB
-    // Di-set true HANYA dari response server (loadLiveNilai)
-    // BUKAN dari autosave lokal
     let sudahAdaDataDiDb = false;
 
-    // ✅ Icon SVG untuk state tombol
     const ICON_SAVE = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>';
     const ICON_UPDATE = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>';
 
-    /**
-     * ✅ Update tampilan tombol:
-     * - Kalau BELUM ada data di DB → "Selesaikan Penilaian" (biru)
-     * - Kalau SUDAH ada data di DB → "Update Penilaian" (hijau)
-     */
     function updateTampilanTombol() {
         const btn = document.getElementById('btnSelesaikan');
         const btnText = document.getElementById('btnSelesaikanText');
@@ -457,23 +520,66 @@
         if (!btn || !btnText || !btnIcon) return;
 
         if (sudahAdaDataDiDb) {
-            // ✅ SUDAH ada data di DB → tombol "Update Penilaian" (hijau)
             btnText.textContent = 'Update Penilaian';
             btnIcon.innerHTML = ICON_UPDATE;
             btn.className = 'flex items-center gap-2 rounded-lg bg-green-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-green-600/30 transition hover:bg-green-700';
         } else {
-            // ✅ BELUM ada data di DB → tombol "Selesaikan Penilaian" (biru)
             btnText.textContent = 'Selesaikan Penilaian';
             btnIcon.innerHTML = ICON_SAVE;
             btn.className = 'flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-blue-600/30 transition hover:bg-blue-700';
         }
     }
 
+    function filterPeserta() {
+        const q      = (document.getElementById('searchPeserta')?.value || '').toLowerCase();
+        const jenis  = document.getElementById('filterJenis')?.value || '';
+        const status = document.getElementById('filterStatus')?.value || '';
+
+        const rows = document.querySelectorAll('#tbodyPeserta tr[data-nama]');
+        let visibleCount = 0;
+
+        rows.forEach(tr => {
+            const nama     = tr.dataset.nama || '';
+            const dataJenis = tr.dataset.jenis || '';
+            const dataStatus = tr.dataset.status || '';
+
+            const cocokNama   = !q || nama.includes(q);
+            const cocokJenis  = !jenis || dataJenis === jenis;
+            const cocokStatus = !status || dataStatus === status;
+
+            const tampil = cocokNama && cocokJenis && cocokStatus;
+            tr.style.display = tampil ? '' : 'none';
+            if (tampil) visibleCount++;
+        });
+
+        const emptyRow = document.getElementById('emptyFilterRow');
+        if (emptyRow) {
+            if (visibleCount === 0 && rows.length > 0) {
+                emptyRow.classList.remove('hidden');
+            } else {
+                emptyRow.classList.add('hidden');
+            }
+        }
+
+        const totalEl = document.getElementById('totalPeserta');
+        if (totalEl) totalEl.textContent = visibleCount;
+    }
+
+    function resetFilter() {
+        const search = document.getElementById('searchPeserta');
+        const jenis  = document.getElementById('filterJenis');
+        const status = document.getElementById('filterStatus');
+
+        if (search) search.value = '';
+        if (jenis)  jenis.value = '';
+        if (status) status.value = '';
+
+        filterPeserta();
+    }
+
     function bukaFormPenilaian(id, nama, instansi, jabatan, linkBerkas, sudahDinilai, tipe) {
         pesertaAktif = { id, nama, instansi, jabatan, linkBerkas, tipe: tipe || '{{ $tipePenguji }}' };
         nilaiAsliDariServer = {};
-
-        // ✅ RESET flag — akan di-set ulang dari loadLiveNilai()
         sudahAdaDataDiDb = false;
 
         document.getElementById('infoNamaPeserta').textContent = nama;
@@ -511,14 +617,12 @@
             catatanRekan.innerHTML = '<p class="text-xs text-gray-400 italic">Menunggu data dari rekan penguji...</p>';
         }
 
-        // ✅ Set tombol ke state awal (belum tahu) — akan di-update oleh loadLiveNilai()
         updateTampilanTombol();
 
         document.getElementById('sectionDaftar').classList.add('hidden');
         document.getElementById('sectionForm').classList.remove('hidden');
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        // Load data dari server
         loadLiveNilai();
         startPolling();
     }
@@ -566,12 +670,7 @@
                 if (data.ok) {
                     document.getElementById('autosaveSuccess').classList.remove('hidden');
                     document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('id-ID');
-
                     nilaiAsliDariServer[urutan] = nilai;
-
-                    // ✅ JANGAN ubah sudahAdaDataDiDb di sini!
-                    // Flag hanya boleh di-set dari loadLiveNilai() (response server)
-                    // supaya konsisten dengan state DB.
 
                     setTimeout(() => {
                         document.getElementById('autosaveSuccess').classList.add('hidden');
@@ -618,9 +717,6 @@
                         document.getElementById('catatanError').classList.add('hidden');
                     }
 
-                    // ✅ JANGAN ubah sudahAdaDataDiDb di sini juga!
-                    // Biarkan loadLiveNilai() yang menentukan.
-
                     setTimeout(() => {
                         document.getElementById('autosaveSuccess').classList.add('hidden');
                     }, 1500);
@@ -653,8 +749,6 @@
         .then(data => {
             if (!data.ok) return;
 
-            // ✅ CEK APAKAH DI DB SUDAH ADA DATA
-            // Kriteria: minimal ada 1 nilai yang tersimpan ATAU catatan tidak kosong
             const adaNilaiDiServer = data.nilai_saya
                 && Object.keys(data.nilai_saya).length > 0
                 && Object.values(data.nilai_saya).some(v => v.nilai !== null && v.nilai !== undefined);
@@ -662,14 +756,12 @@
             const adaCatatanDiServer = data.catatan_saya
                 && data.catatan_saya.trim() !== '';
 
-            // ✅ Set flag & update tombol berdasarkan state DB
             const stateDb = adaNilaiDiServer || adaCatatanDiServer;
             if (sudahAdaDataDiDb !== stateDb) {
                 sudahAdaDataDiDb = stateDb;
                 updateTampilanTombol();
             }
 
-            // Isi nilai sendiri
             Object.entries(data.nilai_saya || {}).forEach(([urutan, val]) => {
                 const inputNilai = document.querySelector(`.input-nilai[data-urutan="${urutan}"]`);
                 if (!inputNilai) return;
@@ -683,13 +775,11 @@
                 }
             });
 
-            // Isi catatan sendiri
             const catatanAnda = document.getElementById('catatanAnda');
             if (catatanAnda && document.activeElement !== catatanAnda && catatanAnda.value === '') {
                 catatanAnda.value = data.catatan_saya ?? '';
             }
 
-            // Isi nilai P2 (LIVE)
             const rekan = data.rekan;
             if (rekan && rekan.nilai) {
                 Object.entries(rekan.nilai).forEach(([urutan, val]) => {
@@ -700,7 +790,6 @@
                 document.querySelectorAll('.nilai-p2').forEach(el => el.textContent = '—');
             }
 
-            // Isi catatan rekan
             const catatanRekan = document.getElementById('catatanRekan');
             if (catatanRekan) {
                 if (rekan && rekan.catatan && rekan.catatan.trim() !== '') {
@@ -777,7 +866,6 @@
 
         catatanError.classList.add('hidden');
 
-        // ✅ Text konfirmasi menyesuaikan state DB
         const isUpdate = sudahAdaDataDiDb;
         const titleConfirm = isUpdate ? 'Update Penilaian?' : 'Selesaikan Penilaian?';
         const textConfirm = isUpdate
@@ -842,16 +930,13 @@
             });
         }
 
-        const searchInput = document.getElementById('searchPeserta');
-        if (searchInput) {
-            searchInput.addEventListener('input', function() {
-                const q = this.value.toLowerCase();
-                document.querySelectorAll('#tbodyPeserta tr').forEach(tr => {
-                    const nama = tr.cells[1]?.textContent.toLowerCase() ?? '';
-                    tr.style.display = nama.includes(q) ? '' : 'none';
-                });
-            });
-        }
+        const searchInput  = document.getElementById('searchPeserta');
+        const filterJenis  = document.getElementById('filterJenis');
+        const filterStatus = document.getElementById('filterStatus');
+
+        if (searchInput)  searchInput.addEventListener('input', filterPeserta);
+        if (filterJenis)  filterJenis.addEventListener('change', filterPeserta);
+        if (filterStatus) filterStatus.addEventListener('change', filterPeserta);
 
         document.addEventListener('visibilitychange', function() {
             if (document.hidden) {

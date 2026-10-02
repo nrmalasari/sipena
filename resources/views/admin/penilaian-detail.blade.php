@@ -28,8 +28,6 @@
                 </svg>
                 Kembali
             </a>
-
-            {{-- ✅ TOMBOL EDIT NILAI --}}
             <a href="{{ route('admin.penilaian.edit', $peserta->id) }}"
                class="flex items-center gap-2 rounded-lg bg-orange-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-700">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -38,7 +36,6 @@
                 </svg>
                 Edit Nilai
             </a>
-
             <a href="{{ route('admin.penilaian.export-excel', $peserta->id) }}"
                class="flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-green-700">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -102,7 +99,6 @@
 
     {{-- ============ 3 SUMMARY CARDS ============ --}}
     <div class="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3 animate-fade-up delay-200">
-        {{-- Card: Nilai Rata-rata --}}
         <div class="rounded-xl bg-white p-5 shadow-sm">
             <div class="flex items-center gap-4">
                 <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
@@ -118,11 +114,9 @@
             </div>
         </div>
 
-        {{-- Card: Info Penilai --}}
         <div class="rounded-xl bg-white p-5 shadow-sm lg:col-span-2">
             <p class="text-xs font-medium text-gray-500 mb-3">Penilai yang Ditugaskan</p>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {{-- Wawancara --}}
                 <div class="rounded-lg bg-blue-50 p-3">
                     <p class="text-[10px] font-bold text-blue-700 uppercase mb-2">Wawancara (2 Penilai)</p>
                     <div class="space-y-1">
@@ -137,7 +131,6 @@
                     </div>
                 </div>
 
-                {{-- Tertulis --}}
                 @if ($isPerpindahan)
                     <div class="rounded-lg bg-purple-50 p-3">
                         <p class="text-[10px] font-bold text-purple-700 uppercase mb-2">Tertulis (1 Penilai)</p>
@@ -157,7 +150,9 @@
         </div>
     </div>
 
-    {{-- ============ TABEL RINCIAN (TANPA KOLOM CATATAN) ============ --}}
+    {{-- =============================================================
+         TABEL RINCIAN
+         ============================================================= --}}
     <div class="mb-6 animate-fade-up delay-300">
         <div class="rounded-xl bg-white shadow-sm overflow-hidden">
             <div class="border-b border-gray-200 px-5 py-4">
@@ -168,106 +163,216 @@
             </div>
 
             <div class="overflow-x-auto scrollbar-thin">
-                <table class="w-full text-xs border-collapse">
-                    <thead>
-                        <tr class="bg-gray-50 border-b border-gray-200">
-                            <th class="px-2 py-3 text-left font-semibold text-gray-600 border-r border-gray-200">Judul Unit Kompetensi</th>
-                            <th class="px-2 py-3 text-left font-semibold text-gray-600 border-r border-gray-200">Jenis Kompetensi</th>
-                            <th class="px-2 py-3 text-left font-semibold text-gray-600 border-r border-gray-200">Elemen Kompetensi</th>
-                            <th class="px-2 py-3 text-center font-semibold text-gray-600 border-r border-gray-200">Rata-rata</th>
-                            <th class="px-2 py-3 text-center font-semibold text-gray-600">Nilai Final</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                            $byUnit = [];
-                            foreach ($struktur as $g) {
-                                $byUnit[$g['judul_unit']][] = $g;
-                            }
-                        @endphp
 
-                        @foreach ($byUnit as $unit => $groups)
+                {{-- ============================================================
+                     ✅ LAYOUT 1: KENAIKAN JENJANG
+                     ============================================================ --}}
+                @if (!$isPerpindahan)
+                    <table class="w-full text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100 border-b-2 border-gray-300">
+                                <th class="px-2 py-3 text-center font-bold text-gray-700 border-r border-gray-300 w-28">Judul Unit Kompetensi</th>
+                                <th class="px-2 py-3 text-center font-bold text-gray-700 border-r border-gray-300 w-32">Jenis Kompetensi</th>
+                                <th class="px-2 py-3 text-center font-bold text-gray-700 border-r border-gray-300">Elemen Kompetensi</th>
+                                <th class="px-2 py-3 text-center font-bold text-red-600 border-r border-gray-300 w-20">Nilai</th>
+                                <th class="px-2 py-3 text-center font-bold text-gray-700 border-r border-gray-300 w-24">Nilai Final</th>
+                                <th class="px-2 py-3 text-center font-bold text-gray-700 w-28">Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             @php
-                                $totalUnit = $totalPerUnit[$unit] ?? 0;
-                                $bobotUnitHeader = $bobotUnit[$unit] ?? 50;
+                                $byUnitKJ = [];
+                                foreach ($struktur as $g) {
+                                    $byUnitKJ[$g['judul_unit']][] = $g;
+                                }
                             @endphp
 
-                            {{-- HEADER UNIT --}}
-                            <tr class="bg-purple-100 border-b-2 border-purple-300">
-                                <td colspan="4" class="px-3 py-3 font-bold text-purple-800 text-sm text-center">
-                                    {{ $unit }} ({{ $bobotUnitHeader }}%)
-                                </td>
-                                <td class="px-3 py-3 text-center font-bold text-purple-800 text-base">
-                                    {{ number_format($totalUnit, 2, ',', '.') }}
-                                </td>
-                            </tr>
-
-                            @foreach ($groups as $g)
+                            @foreach ($byUnitKJ as $unit => $groups)
                                 @php
-                                    $jumlahElemen = count($g['elemen']);
-                                    $keyGrup = $unit . '|' . $g['jenis_kompetensi'];
-                                    $override = $overrides[$keyGrup] ?? null;
-                                    $rataRataJenis = $override?->rata_rata_override ?? $g['rata_rata_jenis'];
-                                    $nilaiFinalJenis = $override?->nilai_final_override ?? $g['nilai_final'];
+                                    $totalUnit = $totalPerUnit[$unit] ?? 0;
+                                    $bobotUnitHeader = $bobotUnit[$unit] ?? 50;
                                 @endphp
 
-                                @foreach ($g['elemen'] as $idx => $e)
-                                    <tr class="border-b border-gray-100 hover:bg-gray-50">
-                                        @if ($idx === 0)
-                                            <td rowspan="{{ $jumlahElemen }}" class="px-2 py-3 font-semibold text-gray-700 border-r border-gray-200 align-middle text-center">
-                                                <div>{{ $g['tipe_ujian'] }}</div>
-                                                <div class="text-[10px] text-gray-500">({{ $g['bobot_tipe_ujian'] }}%)</div>
-                                            </td>
-                                            <td rowspan="{{ $jumlahElemen }}" class="px-2 py-3 font-semibold text-gray-700 border-r border-gray-200 align-middle text-center">
-                                                <div>{{ $g['jenis_kompetensi'] }}</div>
-                                                <div class="text-[10px] text-gray-500">({{ $g['bobot_kompetensi'] }}%)</div>
-                                            </td>
-                                        @endif
-
-                                        <td class="px-2 py-3 text-gray-700 border-r border-gray-200">
-                                            {{ $e['nama_elemen'] }}
-                                        </td>
-                                        <td class="px-2 py-3 text-center font-semibold text-gray-800 border-r border-gray-200">
-                                            {{ $e['rata_rata_elemen'] !== null ? number_format($e['rata_rata_elemen'], 2, ',', '.') : '0,00' }}
-                                        </td>
-
-                                        @if ($idx === 0)
-                                            <td rowspan="{{ $jumlahElemen }}" class="px-2 py-3 text-center align-middle bg-purple-50">
-                                                <span class="font-bold text-purple-700 text-sm">
-                                                    {{ $nilaiFinalJenis !== null ? number_format($nilaiFinalJenis, 2, ',', '.') : '0,00' }}
-                                                </span>
-                                            </td>
-                                        @endif
-                                    </tr>
-                                @endforeach
-
-                                {{-- BARIS RATA-RATA JENIS --}}
-                                <tr class="bg-yellow-50 border-b border-yellow-200">
-                                    <td colspan="2" class="px-2 py-2 text-right text-[10px] font-bold text-gray-600">
-                                        Rata-rata
+                                <tr class="bg-purple-100 border-b border-gray-300">
+                                    <td colspan="5" class="px-3 py-2 font-bold text-purple-800 text-center border-r border-gray-300">
+                                        {{ $unit }} ({{ $bobotUnitHeader }}%)
                                     </td>
-                                    <td class="px-2 py-2 text-[10px] text-gray-500 text-center">
-                                        ({{ $g['jumlah_elemen'] }} elemen)
-                                    </td>
-                                    <td class="px-2 py-2 text-center font-bold text-gray-800 border-r border-gray-200">
-                                        {{ $rataRataJenis !== null ? number_format($rataRataJenis, 2, ',', '.') : '0,00' }}
-                                    </td>
-                                    <td class="px-2 py-2 text-[10px] text-gray-500 text-center">
-                                        {{ $g['bobot_kompetensi'] }}% × {{ $g['bobot_tipe_ujian'] }}% = <span class="font-bold text-purple-700">{{ $nilaiFinalJenis !== null ? number_format($nilaiFinalJenis, 2, ',', '.') : '0,00' }}</span>
+                                    <td class="px-3 py-2 text-center font-bold text-purple-800">
+                                        {{ number_format($totalUnit, 2, ',', '.') }}
                                     </td>
                                 </tr>
+
+                                @foreach ($groups as $g)
+                                    @php
+                                        $jumlahElemen = count($g['elemen']);
+                                        $rataRataJenis = $g['rata_rata_jenis'];
+                                        $nilaiFinalJenis = $g['nilai_final'];
+                                    @endphp
+
+                                    @foreach ($g['elemen'] as $idx => $e)
+                                        <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                            @if ($idx === 0)
+                                                <td rowspan="{{ $jumlahElemen }}" class="px-2 py-2 font-semibold text-gray-800 border-r border-gray-300 align-middle text-center bg-blue-50">
+                                                    <div>{{ $g['tipe_ujian'] }} ({{ $g['bobot_tipe_ujian'] }}%)</div>
+                                                </td>
+                                                <td rowspan="{{ $jumlahElemen }}" class="px-2 py-2 font-semibold text-red-600 border-r border-gray-300 align-middle text-center bg-red-50">
+                                                    <div>{{ $g['jenis_kompetensi'] }} ({{ $g['bobot_kompetensi'] }}%)</div>
+                                                </td>
+                                            @endif
+
+                                            <td class="px-2 py-2 text-gray-700 border-r border-gray-300">
+                                                {{ $e['nama_elemen'] }}
+                                            </td>
+
+                                            <td class="px-2 py-2 text-center text-red-600 font-semibold border-r border-gray-300">
+                                                {{ $e['rata_rata_elemen'] !== null ? number_format($e['rata_rata_elemen'], 2, ',', '.') : '0,00' }}
+                                            </td>
+
+                                            @if ($idx === 0)
+                                                <td rowspan="{{ $jumlahElemen }}" class="px-2 py-2 text-center align-middle font-bold text-gray-800 border-r border-gray-300 bg-gray-50">
+                                                    {{ $nilaiFinalJenis !== null ? number_format($nilaiFinalJenis, 2, ',', '.') : '0,00' }}
+                                                </td>
+                                                <td rowspan="{{ $jumlahElemen }}" class="px-2 py-2 border-r border-gray-300"></td>
+                                            @endif
+                                        </tr>
+                                    @endforeach
+
+                                    <tr class="bg-yellow-50 border-b-2 border-gray-300">
+                                        <td colspan="3" class="px-2 py-2 text-right text-[10px] font-bold text-gray-700 border-r border-gray-300">
+                                            Rata-rata {{ $g['jenis_kompetensi'] }} ({{ $g['jumlah_elemen'] }} elemen)
+                                        </td>
+                                        <td class="px-2 py-2 text-center font-bold text-gray-800 border-r border-gray-300">
+                                            {{ $rataRataJenis !== null ? number_format($rataRataJenis, 2, ',', '.') : '0,00' }}
+                                        </td>
+                                        <td class="px-2 py-2 border-r border-gray-300"></td>
+                                        <td class="px-2 py-2 border-r border-gray-300"></td>
+                                    </tr>
+                                @endforeach
                             @endforeach
-                        @endforeach
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                @else
+                {{-- ============================================================
+                     ✅ LAYOUT 2: PERPINDAHAN JABATAN
+                     
+                     Aturan:
+                     - WAWANCARA: nilai final ditampilkan di SETIAP grup (per jenis)
+                     - TERTULIS: nilai final hanya ditampilkan di grup PERTAMA saja per unit
+                                 (karena digabung — rata-rata gabungan × bobot_tipe)
+                     ============================================================ --}}
+                    <table class="w-full text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100 border-b-2 border-gray-300">
+                                <th class="px-2 py-3 text-center font-bold text-gray-700 border-r border-gray-300 w-28">Judul Unit Kompetensi</th>
+                                <th class="px-2 py-3 text-center font-bold text-gray-700 border-r border-gray-300 w-32">Jenis Kompetensi</th>
+                                <th class="px-2 py-3 text-center font-bold text-gray-700 border-r border-gray-300">Elemen Kompetensi</th>
+                                <th class="px-2 py-3 text-center font-bold text-gray-700 border-r border-gray-300 w-20">Rata-rata</th>
+                                <th class="px-2 py-3 text-center font-bold text-gray-700 border-r border-gray-300 w-24">Nilai Final</th>
+                                <th class="px-2 py-3 text-center font-bold text-gray-700 w-28">Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                                $byUnitPJ = [];
+                                foreach ($struktur as $g) {
+                                    $byUnitPJ[$g['judul_unit']][] = $g;
+                                }
+                            @endphp
+
+                            @foreach ($byUnitPJ as $unit => $groups)
+                                @php
+                                    $totalUnit = $totalPerUnit[$unit] ?? 0;
+                                    $bobotUnitHeader = $bobotUnit[$unit] ?? 50;
+                                    // Track apakah tipe TERTULIS sudah pernah menampilkan nilai final di unit ini
+                                    $tertulisSudahTampil = false;
+                                @endphp
+
+                                {{-- HEADER UNIT --}}
+                                <tr class="bg-purple-100 border-b border-gray-300">
+                                    <td colspan="5" class="px-3 py-2 font-bold text-purple-800 text-center border-r border-gray-300">
+                                        {{ $unit }} ({{ $bobotUnitHeader }}%)
+                                    </td>
+                                    <td class="px-3 py-2 text-center font-bold text-purple-800">
+                                        {{ number_format($totalUnit, 2, ',', '.') }}
+                                    </td>
+                                </tr>
+
+                                @foreach ($groups as $g)
+                                    @php
+                                        $jumlahElemen = count($g['elemen']);
+                                        $rataRataJenis = $g['rata_rata_jenis'];
+                                        $nilaiFinalJenis = $g['nilai_final'];
+
+                                        $isTertulis = $g['tipe_ujian'] === 'Tertulis';
+
+                                        // ✅ ATURAN BARU:
+                                        // - Wawancara → SELALU tampilkan nilai final
+                                        // - Tertulis  → tampil HANYA di grup pertama
+                                        if ($isTertulis) {
+                                            $tampilkanNilaiFinal = !$tertulisSudahTampil;
+                                            $tertulisSudahTampil = true;
+                                        } else {
+                                            $tampilkanNilaiFinal = true;
+                                        }
+                                    @endphp
+
+                                    @foreach ($g['elemen'] as $idx => $e)
+                                        <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                            @if ($idx === 0)
+                                                <td rowspan="{{ $jumlahElemen }}" class="px-2 py-2 font-semibold text-gray-800 border-r border-gray-300 align-middle text-center bg-blue-50">
+                                                    <div>{{ $g['tipe_ujian'] }}</div>
+                                                    <div class="text-[10px] text-gray-600">({{ $g['bobot_tipe_ujian'] }}%)</div>
+                                                </td>
+                                                <td rowspan="{{ $jumlahElemen }}" class="px-2 py-2 font-semibold text-gray-800 border-r border-gray-300 align-middle text-center">
+                                                    <div>{{ $g['jenis_kompetensi'] }}</div>
+                                                    <div class="text-[10px] text-gray-600">({{ $g['bobot_kompetensi'] }}%)</div>
+                                                </td>
+                                            @endif
+
+                                            <td class="px-2 py-2 text-gray-700 border-r border-gray-300">
+                                                {{ $e['nama_elemen'] }}
+                                            </td>
+
+                                            <td class="px-2 py-2 text-center font-semibold text-gray-800 border-r border-gray-300">
+                                                {{ $e['rata_rata_elemen'] !== null ? number_format($e['rata_rata_elemen'], 2, ',', '.') : '0,00' }}
+                                            </td>
+
+                                            @if ($idx === 0)
+                                                <td rowspan="{{ $jumlahElemen }}" class="px-2 py-2 text-center align-middle font-bold text-gray-800 border-r border-gray-300 bg-gray-50">
+                                                    {{-- Nilai final tampil sesuai aturan --}}
+                                                    {{ $tampilkanNilaiFinal && $nilaiFinalJenis !== null
+                                                        ? number_format($nilaiFinalJenis, 2, ',', '.')
+                                                        : '' }}
+                                                </td>
+                                                <td rowspan="{{ $jumlahElemen }}" class="px-2 py-2 border-r border-gray-300"></td>
+                                            @endif
+                                        </tr>
+                                    @endforeach
+
+                                    {{-- BARIS RATA-RATA JENIS --}}
+                                    <tr class="bg-yellow-50 border-b-2 border-gray-300">
+                                        <td colspan="3" class="px-2 py-2 text-right text-[10px] font-bold text-gray-700 border-r border-gray-300">
+                                            Rata-rata {{ $g['jenis_kompetensi'] }} ({{ $g['jumlah_elemen'] }} elemen)
+                                        </td>
+                                        <td class="px-2 py-2 text-center font-bold text-gray-800 border-r border-gray-300">
+                                            {{ $rataRataJenis !== null ? number_format($rataRataJenis, 2, ',', '.') : '0,00' }}
+                                        </td>
+                                        <td class="px-2 py-2 border-r border-gray-300"></td>
+                                        <td class="px-2 py-2 border-r border-gray-300"></td>
+                                    </tr>
+                                @endforeach
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endif
+
             </div>
         </div>
     </div>
 
-    {{-- ============ KOTAK KHUSUS CATATAN PENGUJI (1 KOTAK) ============ --}}
+    {{-- ============ KOTAK CATATAN PENGUJI ============ --}}
     <div class="mb-6 animate-fade-up delay-400">
         <div class="rounded-xl bg-white shadow-sm border-2 border-amber-300 overflow-hidden">
-            {{-- Header --}}
             <div class="flex items-center justify-between border-b border-amber-200 bg-amber-50 px-5 py-4">
                 <div class="flex items-center gap-3">
                     <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-amber-100">
@@ -288,13 +393,11 @@
                 </span>
             </div>
 
-            {{-- Body --}}
             <div class="p-5">
                 @if ($semuaCatatan->count() > 0)
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         @foreach ($semuaCatatan as $cp)
                             <div class="rounded-lg border border-gray-200 bg-gray-50 p-4 hover:shadow-md transition">
-                                {{-- Header: Nama + Tipe --}}
                                 <div class="flex items-center justify-between mb-2 pb-2 border-b border-gray-200">
                                     <div class="flex items-center gap-2">
                                         <div class="flex h-7 w-7 items-center justify-center rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold">
@@ -314,8 +417,6 @@
                                         {{ $cp->tipe }}
                                     </span>
                                 </div>
-
-                                {{-- Isi Catatan --}}
                                 <p class="text-xs text-gray-700 whitespace-pre-line leading-relaxed">
                                     {{ $cp->catatan }}
                                 </p>
@@ -336,7 +437,7 @@
         </div>
     </div>
 
-    {{-- ============ GRAFIK (FULL WIDTH) ============ --}}
+    {{-- GRAFIK --}}
     <div class="mb-6 animate-fade-up delay-500">
         <div class="rounded-xl bg-white p-5 shadow-sm">
             <h3 class="text-sm font-bold text-gray-800 mb-4">Grafik Nilai Kompetensi</h3>
@@ -346,15 +447,14 @@
         </div>
     </div>
 
-    {{-- ============ CATATAN INFO ============ --}}
+    {{-- CATATAN INFO --}}
     <div class="mb-4 rounded-xl bg-white p-5 shadow-sm">
         <h3 class="text-sm font-bold text-gray-800 mb-3">Keterangan Perhitungan</h3>
         <ul class="space-y-2 text-xs text-gray-600">
-            <li>• Nilai = rata-rata 2 penilai per kompetensi (Wawancara)</li>
-            <li>• Nilai = nilai 1 penilai (Tertulis)</li>
-            <li>• Nilai Final = Rata-rata × Bobot Kompetensi × Bobot Tipe Ujian</li>
-            <li>• <strong>Keterangan</strong> per unit = jumlah Nilai Final semua jenis</li>
-            <li>• <strong>Catatan Penguji</strong> bersifat wajib & ditampilkan di kotak khusus di atas</li>
+            <li>• <strong>Wawancara</strong>: Nilai Final per jenis = Rata-rata jenis × Bobot Kompetensi</li>
+            <li>• <strong>Tertulis</strong>: Semua jenis digabung per unit, lalu Nilai Final = Rata-rata gabungan × Bobot Tipe Ujian</li>
+            <li>• <strong>Keterangan</strong> per unit = jumlah Nilai Final semua tipe dalam satu unit</li>
+            <li>• <strong>Nilai Akhir</strong> = Total Unit ÷ Jumlah Unit</li>
         </ul>
     </div>
 
