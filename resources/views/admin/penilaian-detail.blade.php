@@ -254,11 +254,12 @@
                 @else
                 {{-- ============================================================
                      ✅ LAYOUT 2: PERPINDAHAN JABATAN
-                     
+
                      Aturan:
-                     - WAWANCARA: nilai final ditampilkan di SETIAP grup (per jenis)
-                     - TERTULIS: nilai final hanya ditampilkan di grup PERTAMA saja per unit
-                                 (karena digabung — rata-rata gabungan × bobot_tipe)
+                     - WAWANCARA : baris rata-rata per jenis (Muncul di tiap grup)
+                     - TERTULIS  : baris rata-rata GABUNGAN (muncul SEKALI di BAGIAN AKHIR unit)
+                                   dengan label nama jenis grup PERTAMA
+                                   + total elemen gabungan
                      ============================================================ --}}
                     <table class="w-full text-xs border-collapse">
                         <thead>
@@ -283,8 +284,29 @@
                                 @php
                                     $totalUnit = $totalPerUnit[$unit] ?? 0;
                                     $bobotUnitHeader = $bobotUnit[$unit] ?? 50;
-                                    // Track apakah tipe TERTULIS sudah pernah menampilkan nilai final di unit ini
-                                    $tertulisSudahTampil = false;
+
+                                    // ✅ Data TERTULIS gabungan per unit ini
+                                    $tertulisGroups = array_values(array_filter($groups, fn($x) => $x['tipe_ujian'] === 'Tertulis'));
+
+                                    // Hitung rata-rata gabungan Tertulis (semua elemen, semua jenis)
+                                    $totalNilaiTertulis = 0;
+                                    $totalElemenTertulis = 0;
+                                    foreach ($tertulisGroups as $tg) {
+                                        foreach ($tg['elemen'] as $te) {
+                                            if ($te['rata_rata_elemen'] !== null) {
+                                                $totalNilaiTertulis += $te['rata_rata_elemen'];
+                                                $totalElemenTertulis++;
+                                            }
+                                        }
+                                    }
+                                    $rataRataGabunganTertulis = $totalElemenTertulis > 0
+                                        ? $totalNilaiTertulis / $totalElemenTertulis
+                                        : null;
+
+                                    // Label nama jenis grup PERTAMA Tertulis
+                                    $jenisLabelGabungan = $tertulisGroups[0]['jenis_kompetensi'] ?? 'Tertulis';
+
+                                    $tertulisSudahTampilNilaiFinal = false;
                                 @endphp
 
                                 {{-- HEADER UNIT --}}
@@ -302,20 +324,10 @@
                                         $jumlahElemen = count($g['elemen']);
                                         $rataRataJenis = $g['rata_rata_jenis'];
                                         $nilaiFinalJenis = $g['nilai_final'];
-
                                         $isTertulis = $g['tipe_ujian'] === 'Tertulis';
-
-                                        // ✅ ATURAN BARU:
-                                        // - Wawancara → SELALU tampilkan nilai final
-                                        // - Tertulis  → tampil HANYA di grup pertama
-                                        if ($isTertulis) {
-                                            $tampilkanNilaiFinal = !$tertulisSudahTampil;
-                                            $tertulisSudahTampil = true;
-                                        } else {
-                                            $tampilkanNilaiFinal = true;
-                                        }
                                     @endphp
 
+                                    {{-- ============ BARIS ELEMEN ============ --}}
                                     @foreach ($g['elemen'] as $idx => $e)
                                         <tr class="border-b border-gray-200 hover:bg-gray-50">
                                             @if ($idx === 0)
@@ -339,28 +351,54 @@
 
                                             @if ($idx === 0)
                                                 <td rowspan="{{ $jumlahElemen }}" class="px-2 py-2 text-center align-middle font-bold text-gray-800 border-r border-gray-300 bg-gray-50">
-                                                    {{-- Nilai final tampil sesuai aturan --}}
-                                                    {{ $tampilkanNilaiFinal && $nilaiFinalJenis !== null
-                                                        ? number_format($nilaiFinalJenis, 2, ',', '.')
-                                                        : '' }}
+                                                    @if ($isTertulis)
+                                                        {{-- Nilai Final Tertulis hanya tampil di grup pertama --}}
+                                                        @if (!$tertulisSudahTampilNilaiFinal && $nilaiFinalJenis !== null)
+                                                            {{ number_format($nilaiFinalJenis, 2, ',', '.') }}
+                                                            @php $tertulisSudahTampilNilaiFinal = true; @endphp
+                                                        @endif
+                                                    @else
+                                                        {{-- Wawancara selalu tampil --}}
+                                                        {{ $nilaiFinalJenis !== null ? number_format($nilaiFinalJenis, 2, ',', '.') : '' }}
+                                                    @endif
                                                 </td>
                                                 <td rowspan="{{ $jumlahElemen }}" class="px-2 py-2 border-r border-gray-300"></td>
                                             @endif
                                         </tr>
                                     @endforeach
 
-                                    {{-- BARIS RATA-RATA JENIS --}}
+                                    {{-- ============ BARIS RATA-RATA WAWANCARA (per jenis) ============ --}}
+                                    @if (!$isTertulis)
+                                        <tr class="bg-yellow-50 border-b-2 border-gray-300">
+                                            <td colspan="3" class="px-2 py-2 text-right text-[10px] font-bold text-gray-700 border-r border-gray-300">
+                                                Rata-rata {{ $g['jenis_kompetensi'] }} ({{ $g['jumlah_elemen'] }} elemen)
+                                            </td>
+                                            <td class="px-2 py-2 text-center font-bold text-gray-800 border-r border-gray-300">
+                                                {{ $rataRataJenis !== null ? number_format($rataRataJenis, 2, ',', '.') : '0,00' }}
+                                            </td>
+                                            <td class="px-2 py-2 border-r border-gray-300"></td>
+                                            <td class="px-2 py-2 border-r border-gray-300"></td>
+                                        </tr>
+                                    @endif
+                                @endforeach
+
+                                {{-- ============================================================
+                                     ✅ BARIS RATA-RATA TERTULIS GABUNGAN
+                                     Ditampilkan SEKALI di BAGIAN AKHIR unit
+                                     (setelah semua grup Tertulis selesai)
+                                     ============================================================ --}}
+                                @if (count($tertulisGroups) > 0 && $rataRataGabunganTertulis !== null)
                                     <tr class="bg-yellow-50 border-b-2 border-gray-300">
                                         <td colspan="3" class="px-2 py-2 text-right text-[10px] font-bold text-gray-700 border-r border-gray-300">
-                                            Rata-rata {{ $g['jenis_kompetensi'] }} ({{ $g['jumlah_elemen'] }} elemen)
+                                            Rata-rata {{ $jenisLabelGabungan }} ({{ $totalElemenTertulis }} elemen)
                                         </td>
                                         <td class="px-2 py-2 text-center font-bold text-gray-800 border-r border-gray-300">
-                                            {{ $rataRataJenis !== null ? number_format($rataRataJenis, 2, ',', '.') : '0,00' }}
+                                            {{ number_format($rataRataGabunganTertulis, 2, ',', '.') }}
                                         </td>
                                         <td class="px-2 py-2 border-r border-gray-300"></td>
                                         <td class="px-2 py-2 border-r border-gray-300"></td>
                                     </tr>
-                                @endforeach
+                                @endif
                             @endforeach
                         </tbody>
                     </table>

@@ -314,18 +314,15 @@ class AdminPenilaianController extends Controller
 
         $data = $this->hitungPenilaian($pesertaId, $peserta);
 
-        // ✅ AMBIL SEMUA PENUGASAN (tanpa orderBy urutan — supaya aman kalau urutan NULL)
         $penugasanWawancara = PenugasanPenilai::with('penilai')
             ->where('peserta_id', $pesertaId)
             ->where('tipe', 'wawancara')
-            ->get()
-            ->values(); // reset index
+            ->get()->values();
 
         $penugasanTertulis = PenugasanPenilai::with('penilai')
             ->where('peserta_id', $pesertaId)
             ->where('tipe', 'tertulis')
-            ->get()
-            ->values();
+            ->get()->values();
 
         $nilaiMentah = PenilaianDetail::where('peserta_id', $pesertaId)
             ->get()
@@ -425,11 +422,26 @@ class AdminPenilaianController extends Controller
 
     /* =========================================================
        EXPORT EXCEL
+       ---------------------------------------------------------
+       Kolom:
+         1. Judul Unit Kompetensi
+         2. Jenis Kompetensi
+         3. Elemen Kompetensi
+         4. Nilai (rata-rata elemen)   <-- TIDAK ada P1/P2
+         5. Nilai Final
+         6. Keterangan
+       + Header info: Nama, NIP, Jabatan, Instansi, Link Berkas
        ========================================================= */
     public function exportExcel($pesertaId, Request $request)
     {
         $peserta = Peserta::findOrFail($pesertaId);
         $data    = $this->hitungPenilaian($pesertaId, $peserta);
+
+        $isPerpindahan = $data['isPerpindahan'];
+
+        // ============ LINK BERKAS PESERTA ============
+        // ✅ Kolom di tabel `pesertas` = `link_berkas`
+        $berkasUrl = !empty($peserta->link_berkas) ? $peserta->link_berkas : null;
 
         $filename = 'Penilaian_' . str_replace(' ', '_', $peserta->nama) . '_' . date('Y-m-d') . '.xls';
 
@@ -438,78 +450,214 @@ class AdminPenilaianController extends Controller
         header('Cache-Control: max-age=0');
         echo "\xEF\xBB\xBF";
 
-        echo '<table border="1" cellpadding="4" cellspacing="0" style="font-family:Arial,sans-serif;font-size:11px;">';
-        echo '<tr><td colspan="8" style="font-weight:bold;font-size:14px;">FORM PENILAIAN ' . strtoupper($peserta->label_jenis_penilaian) . '</td></tr>';
-        echo '<tr><td colspan="8">Nama: ' . $peserta->nama . '</td></tr>';
-        echo '<tr><td colspan="8">Jabatan: ' . $peserta->jabatan . '</td></tr>';
-        echo '<tr><td colspan="8">Instansi: ' . $peserta->instansi . '</td></tr>';
-        echo '<tr><td colspan="8"></td></tr>';
+        echo '<table border="1" cellpadding="4" cellspacing="0" style="font-family:Arial,sans-serif;font-size:11px;border-collapse:collapse;">';
 
-        echo '<tr style="background:#f0f0f0;font-weight:bold;">';
-        echo '<td>Judul Unit Kompetensi</td>';
-        echo '<td>Tipe Ujian</td>';
-        echo '<td>Jenis Kompetensi</td>';
-        echo '<td>Elemen Kompetensi</td>';
-        echo '<td>Nilai P1</td>';
-        echo '<td>Nilai P2</td>';
-        echo '<td>Rata-rata</td>';
-        echo '<td>Nilai Final</td>';
-        echo '</tr>';
+        // ============ HEADER INFO ============
+        echo '<tr><td colspan="6" style="font-weight:bold;font-size:14px;text-align:center;border:none;">FORM PENILAIAN ' . strtoupper($peserta->label_jenis_penilaian) . '</td></tr>';
+        echo '<tr><td colspan="6" style="border:none;">Nama: ' . $peserta->nama . '</td></tr>';
+        echo '<tr><td colspan="6" style="border:none;">NIP: ' . ($peserta->nip ?? '-') . '</td></tr>';
+        echo '<tr><td colspan="6" style="border:none;">Jabatan: ' . $peserta->jabatan . '</td></tr>';
+        echo '<tr><td colspan="6" style="border:none;">Instansi: ' . $peserta->instansi . '</td></tr>';
 
+        // ✅ LINK BERKAS PESERTA
+        if ($berkasUrl) {
+            echo '<tr><td colspan="6" style="border:none;">Berkas Peserta: '
+                 . '<a href="' . htmlspecialchars($berkasUrl) . '" target="_blank" style="color:#2563EB;text-decoration:underline;">'
+                 . htmlspecialchars($berkasUrl)
+                 . '</a></td></tr>';
+        } else {
+            echo '<tr><td colspan="6" style="border:none;">Berkas Peserta: <i>Tidak ada berkas</i></td></tr>';
+        }
+
+        echo '<tr><td colspan="6" style="border:none;"></td></tr>';
+
+        // ============ GROUP BY UNIT ============
         $byUnit = [];
         foreach ($data['struktur'] as $g) {
             $byUnit[$g['judul_unit']][] = $g;
         }
 
-        foreach ($byUnit as $unit => $groups) {
-            $totalUnit = $data['totalPerUnit'][$unit] ?? 0;
-            $bobotUnit = $data['bobotUnit'][$unit] ?? 50;
-
-            echo '<tr style="background:#e0e0e0;font-weight:bold;">';
-            echo '<td colspan="7">' . $unit . ' (' . $bobotUnit . '%)</td>';
-            echo '<td style="text-align:right;">' . number_format($totalUnit, 2, ',', '.') . '</td>';
+        if (!$isPerpindahan) {
+            // ============================================================
+            // LAYOUT 1: KENAIKAN JENJANG
+            // Header: Judul Unit | Jenis Kompetensi | Elemen | Nilai | Nilai Final | Keterangan
+            // ============================================================
+            echo '<tr style="background:#E5E7EB;font-weight:bold;text-align:center;">';
+            echo '<td style="width:180px;border:1px solid #666;">Judul Unit Kompetensi</td>';
+            echo '<td style="width:180px;border:1px solid #666;">Jenis Kompetensi</td>';
+            echo '<td style="border:1px solid #666;">Elemen Kompetensi</td>';
+            echo '<td style="width:70px;border:1px solid #666;color:#DC2626;">Nilai</td>';
+            echo '<td style="width:90px;border:1px solid #666;">Nilai Final</td>';
+            echo '<td style="width:120px;border:1px solid #666;">Keterangan</td>';
             echo '</tr>';
 
-            foreach ($groups as $g) {
-                $jumlah = count($g['elemen']);
-                $keyGrup = $unit . '|' . $g['jenis_kompetensi'];
-                $rataRataJenis = $g['rata_rata_jenis'];
-                $nilaiFinalJenis = $g['nilai_final'];
+            foreach ($byUnit as $unit => $groups) {
+                $totalUnit = $data['totalPerUnit'][$unit] ?? 0;
+                $bobotUnitHeader = $data['bobotUnit'][$unit] ?? 50;
 
-                foreach ($g['elemen'] as $idx => $e) {
-                    echo '<tr>';
-                    if ($idx === 0) {
-                        echo '<td rowspan="' . ($jumlah + 1) . '">' . $unit . '</td>';
-                        echo '<td rowspan="' . ($jumlah + 1) . '">' . $g['tipe_ujian'] . ' (' . $g['bobot_tipe_ujian'] . '%)</td>';
-                        echo '<td rowspan="' . ($jumlah + 1) . '">' . $g['jenis_kompetensi'] . ' (' . $g['bobot_kompetensi'] . '%)</td>';
-                    }
-                    echo '<td>' . $e['nama_elemen'] . '</td>';
-                    echo '<td style="text-align:center;">' . ($e['nilai_p1'] !== null ? number_format($e['nilai_p1'], 2, ',', '.') : '0,00') . '</td>';
-                    echo '<td style="text-align:center;">' . ($e['nilai_p2'] !== null ? number_format($e['nilai_p2'], 2, ',', '.') : '0,00') . '</td>';
-                    echo '<td style="text-align:center;">' . ($e['rata_rata_elemen'] !== null ? number_format($e['rata_rata_elemen'], 2, ',', '.') : '0,00') . '</td>';
+                // HEADER UNIT
+                echo '<tr style="background:#E9D5FF;font-weight:bold;">';
+                echo '<td colspan="5" style="text-align:center;color:#5B21B6;border:1px solid #666;">' . $unit . ' (' . $bobotUnitHeader . '%)</td>';
+                echo '<td style="text-align:center;color:#5B21B6;border:1px solid #666;">' . number_format($totalUnit, 2, ',', '.') . '</td>';
+                echo '</tr>';
 
-                    if ($idx === 0) {
-                        echo '<td rowspan="' . ($jumlah + 1) . '" style="text-align:center;font-weight:bold;">' . ($nilaiFinalJenis !== null ? number_format($nilaiFinalJenis, 2, ',', '.') : '0,00') . '</td>';
+                foreach ($groups as $g) {
+                    $jumlahElemen    = count($g['elemen']);
+                    $rataRataJenis   = $g['rata_rata_jenis'];
+                    $nilaiFinalJenis = $g['nilai_final'];
+
+                    // BARIS ELEMEN
+                    foreach ($g['elemen'] as $idx => $e) {
+                        echo '<tr>';
+                        if ($idx === 0) {
+                            echo '<td rowspan="' . $jumlahElemen . '" style="text-align:center;background:#DBEAFE;font-weight:bold;vertical-align:middle;border:1px solid #666;">'
+                                 . $g['tipe_ujian'] . ' (' . $g['bobot_tipe_ujian'] . '%)</td>';
+                            echo '<td rowspan="' . $jumlahElemen . '" style="text-align:center;background:#FEE2E2;font-weight:bold;color:#DC2626;vertical-align:middle;border:1px solid #666;">'
+                                 . $g['jenis_kompetensi'] . ' (' . $g['bobot_kompetensi'] . '%)</td>';
+                        }
+                        echo '<td style="border:1px solid #666;">' . $e['nama_elemen'] . '</td>';
+                        echo '<td style="text-align:center;color:#DC2626;font-weight:bold;border:1px solid #666;">'
+                             . ($e['rata_rata_elemen'] !== null ? number_format($e['rata_rata_elemen'], 2, ',', '.') : '0,00')
+                             . '</td>';
+
+                        if ($idx === 0) {
+                            echo '<td rowspan="' . $jumlahElemen . '" style="text-align:center;vertical-align:middle;font-weight:bold;background:#F9FAFB;border:1px solid #666;">'
+                                 . ($nilaiFinalJenis !== null ? number_format($nilaiFinalJenis, 2, ',', '.') : '0,00')
+                                 . '</td>';
+                            echo '<td rowspan="' . $jumlahElemen . '" style="background:#F9FAFB;border:1px solid #666;"></td>';
+                        }
+                        echo '</tr>';
                     }
+
+                    // BARIS RATA-RATA JENIS
+                    echo '<tr style="background:#FEF9C3;font-weight:bold;">';
+                    echo '<td colspan="3" style="text-align:right;font-size:10px;border:1px solid #666;">'
+                         . 'Rata-rata ' . $g['jenis_kompetensi'] . ' (' . $g['jumlah_elemen'] . ' elemen)</td>';
+                    echo '<td style="text-align:center;border:1px solid #666;">'
+                         . ($rataRataJenis !== null ? number_format($rataRataJenis, 2, ',', '.') : '0,00')
+                         . '</td>';
+                    echo '<td style="border:1px solid #666;"></td>';
+                    echo '<td style="border:1px solid #666;"></td>';
                     echo '</tr>';
                 }
+            }
+        } else {
+            // ============================================================
+            // LAYOUT 2: PERPINDAHAN JABATAN
+            // Header: Judul Unit | Jenis Kompetensi | Elemen | Rata-rata | Nilai Final | Keterangan
+            // ============================================================
+            echo '<tr style="background:#E5E7EB;font-weight:bold;text-align:center;">';
+            echo '<td style="width:180px;border:1px solid #666;">Judul Unit Kompetensi</td>';
+            echo '<td style="width:180px;border:1px solid #666;">Jenis Kompetensi</td>';
+            echo '<td style="border:1px solid #666;">Elemen Kompetensi</td>';
+            echo '<td style="width:70px;border:1px solid #666;">Rata-rata</td>';
+            echo '<td style="width:90px;border:1px solid #666;">Nilai Final</td>';
+            echo '<td style="width:120px;border:1px solid #666;">Keterangan</td>';
+            echo '</tr>';
 
-                echo '<tr style="background:#f9f9f9;font-weight:bold;">';
-                echo '<td colspan="4" style="text-align:right;">Rata-rata ' . $g['jenis_kompetensi'] . ':</td>';
-                echo '<td colspan="2" style="text-align:center;">' . $jumlah . ' elemen</td>';
-                echo '<td style="text-align:center;">' . number_format($rataRataJenis ?? 0, 2, ',', '.') . '</td>';
-                echo '<td style="text-align:center;">' . number_format($nilaiFinalJenis ?? 0, 2, ',', '.') . '</td>';
+            foreach ($byUnit as $unit => $groups) {
+                $totalUnit = $data['totalPerUnit'][$unit] ?? 0;
+                $bobotUnitHeader = $data['bobotUnit'][$unit] ?? 50;
+
+                // Data TERTULIS gabungan per unit
+                $tertulisGroups = array_values(array_filter($groups, fn($x) => $x['tipe_ujian'] === 'Tertulis'));
+
+                // Hitung rata-rata gabungan Tertulis
+                $totalNilaiTertulis = 0;
+                $totalElemenTertulis = 0;
+                foreach ($tertulisGroups as $tg) {
+                    foreach ($tg['elemen'] as $te) {
+                        if ($te['rata_rata_elemen'] !== null) {
+                            $totalNilaiTertulis += $te['rata_rata_elemen'];
+                            $totalElemenTertulis++;
+                        }
+                    }
+                }
+                $rataRataGabunganTertulis = $totalElemenTertulis > 0
+                    ? $totalNilaiTertulis / $totalElemenTertulis
+                    : null;
+
+                $jenisLabelGabungan = $tertulisGroups[0]['jenis_kompetensi'] ?? 'Tertulis';
+
+                $tertulisSudahTampilNilaiFinal = false;
+
+                // HEADER UNIT
+                echo '<tr style="background:#E9D5FF;font-weight:bold;">';
+                echo '<td colspan="5" style="text-align:center;color:#5B21B6;border:1px solid #666;">' . $unit . ' (' . $bobotUnitHeader . '%)</td>';
+                echo '<td style="text-align:center;color:#5B21B6;border:1px solid #666;">' . number_format($totalUnit, 2, ',', '.') . '</td>';
                 echo '</tr>';
+
+                foreach ($groups as $g) {
+                    $jumlahElemen    = count($g['elemen']);
+                    $rataRataJenis   = $g['rata_rata_jenis'];
+                    $nilaiFinalJenis = $g['nilai_final'];
+                    $isTertulis      = $g['tipe_ujian'] === 'Tertulis';
+
+                    foreach ($g['elemen'] as $idx => $e) {
+                        echo '<tr>';
+                        if ($idx === 0) {
+                            echo '<td rowspan="' . $jumlahElemen . '" style="text-align:center;background:#DBEAFE;font-weight:bold;vertical-align:middle;border:1px solid #666;">'
+                                 . $g['tipe_ujian'] . '<br><span style="font-size:10px;">(' . $g['bobot_tipe_ujian'] . '%)</span></td>';
+                            echo '<td rowspan="' . $jumlahElemen . '" style="text-align:center;background:#F9FAFB;font-weight:bold;vertical-align:middle;border:1px solid #666;">'
+                                 . $g['jenis_kompetensi'] . '<br><span style="font-size:10px;">(' . $g['bobot_kompetensi'] . '%)</span></td>';
+                        }
+                        echo '<td style="border:1px solid #666;">' . $e['nama_elemen'] . '</td>';
+                        echo '<td style="text-align:center;font-weight:bold;border:1px solid #666;">'
+                             . ($e['rata_rata_elemen'] !== null ? number_format($e['rata_rata_elemen'], 2, ',', '.') : '0,00')
+                             . '</td>';
+
+                        if ($idx === 0) {
+                            echo '<td rowspan="' . $jumlahElemen . '" style="text-align:center;vertical-align:middle;font-weight:bold;background:#F9FAFB;border:1px solid #666;">';
+                            if ($isTertulis) {
+                                if (!$tertulisSudahTampilNilaiFinal && $nilaiFinalJenis !== null) {
+                                    echo number_format($nilaiFinalJenis, 2, ',', '.');
+                                    $tertulisSudahTampilNilaiFinal = true;
+                                }
+                            } else {
+                                echo $nilaiFinalJenis !== null ? number_format($nilaiFinalJenis, 2, ',', '.') : '';
+                            }
+                            echo '</td>';
+                            echo '<td rowspan="' . $jumlahElemen . '" style="background:#F9FAFB;border:1px solid #666;"></td>';
+                        }
+                        echo '</tr>';
+                    }
+
+                    // BARIS RATA-RATA WAWANCARA (per jenis)
+                    if (!$isTertulis) {
+                        echo '<tr style="background:#FEF9C3;font-weight:bold;">';
+                        echo '<td colspan="3" style="text-align:right;font-size:10px;border:1px solid #666;">'
+                             . 'Rata-rata ' . $g['jenis_kompetensi'] . ' (' . $g['jumlah_elemen'] . ' elemen)</td>';
+                        echo '<td style="text-align:center;border:1px solid #666;">'
+                             . ($rataRataJenis !== null ? number_format($rataRataJenis, 2, ',', '.') : '0,00')
+                             . '</td>';
+                        echo '<td style="border:1px solid #666;"></td>';
+                        echo '<td style="border:1px solid #666;"></td>';
+                        echo '</tr>';
+                    }
+                }
+
+                // BARIS RATA-RATA TERTULIS GABUNGAN (SEKALI di akhir unit)
+                if (count($tertulisGroups) > 0 && $rataRataGabunganTertulis !== null) {
+                    echo '<tr style="background:#FEF9C3;font-weight:bold;">';
+                    echo '<td colspan="3" style="text-align:right;font-size:10px;border:1px solid #666;">'
+                         . 'Rata-rata ' . $jenisLabelGabungan . ' (' . $totalElemenTertulis . ' elemen)</td>';
+                    echo '<td style="text-align:center;border:1px solid #666;">' . number_format($rataRataGabunganTertulis, 2, ',', '.') . '</td>';
+                    echo '<td style="border:1px solid #666;"></td>';
+                    echo '<td style="border:1px solid #666;"></td>';
+                    echo '</tr>';
+                }
             }
         }
 
-        echo '<tr style="background:#dbeafe;font-weight:bold;font-size:13px;">';
-        echo '<td colspan="6" style="text-align:right;">NILAI FINAL (Total Unit ÷ ' . $data['jumlahUnit'] . ')</td>';
-        echo '<td colspan="2" style="text-align:center;">' . number_format($data['nilaiFinalAkhir'], 2, ',', '.') . '</td>';
+        // ============ BARIS NILAI FINAL AKHIR ============
+        echo '<tr><td colspan="6" style="border:none;"></td></tr>';
+        echo '<tr style="background:#DBEAFE;font-weight:bold;font-size:13px;">';
+        echo '<td colspan="5" style="text-align:right;border:1px solid #666;">NILAI FINAL (Total Unit ÷ ' . $data['jumlahUnit'] . ')</td>';
+        echo '<td style="text-align:center;border:1px solid #666;">' . number_format($data['nilaiFinalAkhir'], 2, ',', '.') . '</td>';
         echo '</tr>';
 
-        echo '<tr><td colspan="8"></td></tr>';
-        echo '<tr><td colspan="8" style="font-style:italic;">Passing grade 71,00 adalah nilai minimal kelulusan</td></tr>';
+        echo '<tr><td colspan="6" style="border:none;"></td></tr>';
+        echo '<tr><td colspan="6" style="font-style:italic;border:none;">Passing grade 71,00 adalah nilai minimal kelulusan</td></tr>';
         echo '</table>';
 
         exit;
@@ -551,16 +699,12 @@ class AdminPenilaianController extends Controller
             ? $this->strukturPerpindahanJabatan()
             : $this->strukturKenaikanJenjang();
 
-        // ==========================================================
-        // ✅ AMBIL PENUGASAN — TANPA orderBy urutan (biar aman)
-        // ==========================================================
+        // Penugasan (values agar index rapi)
         $penugasanWawancara = PenugasanPenilai::with('penilai')
             ->where('peserta_id', $pesertaId)
             ->where('tipe', 'wawancara')
-            ->get()
-            ->values();
+            ->get()->values();
 
-        // ✅ P1 & P2 = element ke-0 dan ke-1 (bukan where urutan)
         $penugasanW1 = $penugasanWawancara->get(0);
         $penugasanW2 = $penugasanWawancara->get(1);
 
@@ -591,8 +735,7 @@ class AdminPenilaianController extends Controller
             $penugasanTertulis = PenugasanPenilai::with('penilai')
                 ->where('peserta_id', $pesertaId)
                 ->where('tipe', 'tertulis')
-                ->get()
-                ->values();
+                ->get()->values();
 
             $penugasanT1 = $penugasanTertulis->get(0);
             $penugasanT2 = $penugasanTertulis->get(1);
@@ -615,9 +758,7 @@ class AdminPenilaianController extends Controller
                 : collect();
         }
 
-        // ==========================================================
-        // ✅ BANGUN STRUKTUR + HITUNG RATA-RATA PER JENIS
-        // ==========================================================
+        // Bangun struktur
         $struktur = [];
         foreach ($strukturMentah as $g) {
             $dP1 = $g['tipe_ujian'] === 'Wawancara' ? $detailP1Wawancara : $detailP1Tertulis;
@@ -669,11 +810,7 @@ class AdminPenilaianController extends Controller
             ];
         }
 
-        // ==========================================================
-        // ✅ HITUNG NILAI FINAL
-        // - WAWANCARA: rata-rata × bobot_kompetensi (per jenis)
-        // - TERTULIS: rata-rata gabungan × bobot_tipe_ujian (per unit)
-        // ==========================================================
+        // Hitung nilai final
         $groupByUnitTipe = [];
         foreach ($struktur as $idx => $g) {
             $key = $g['judul_unit'] . '|' . $g['tipe_ujian'];
@@ -715,11 +852,7 @@ class AdminPenilaianController extends Controller
             }
         }
 
-        // ==========================================================
-        // ✅ TOTAL PER UNIT
-        // - WAWANCARA → tambahkan SETIAP grup
-        // - TERTULIS  → tambahkan HANYA SEKALI per unit
-        // ==========================================================
+        // Total per unit
         $totalPerUnit = [];
         $tertulisSudahDihitung = [];
 
@@ -730,9 +863,7 @@ class AdminPenilaianController extends Controller
             if (!isset($totalPerUnit[$unit])) $totalPerUnit[$unit] = 0;
 
             if ($tipe === 'Tertulis') {
-                if (in_array($unit, $tertulisSudahDihitung)) {
-                    continue;
-                }
+                if (in_array($unit, $tertulisSudahDihitung)) continue;
                 if ($g['nilai_final'] !== null) {
                     $totalPerUnit[$unit] += $g['nilai_final'];
                     $tertulisSudahDihitung[] = $unit;

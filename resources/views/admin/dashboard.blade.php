@@ -221,12 +221,12 @@
             <table class="w-full text-sm">
                 <thead>
                     <tr class="border-b border-gray-200 bg-gray-50 text-left">
-                        <th class="px-4 py-3 font-semibold text-gray-600">No.</th>
-                        <th class="px-4 py-3 font-semibold text-gray-600">Nama Peserta</th>
-                        <th class="px-4 py-3 font-semibold text-gray-600">Jabatan</th>
-                        <th class="px-4 py-3 font-semibold text-gray-600">Jenis Penilaian</th>
-                        <th class="px-4 py-3 font-semibold text-gray-600">Status</th>
-                        <th class="px-4 py-3 text-center font-semibold text-gray-600">Aksi</th>
+                        <th class="px-4 py-3 font-semibold text-gray-600 w-12">No.</th>
+                        <th class="px-4 py-3 font-semibold text-gray-600 min-w-[180px]">Nama Peserta</th>
+                        <th class="px-4 py-3 font-semibold text-gray-600 min-w-[150px]">Jabatan</th>
+                        <th class="px-4 py-3 font-semibold text-gray-600 min-w-[150px]">Jenis Penilaian</th>
+                        <th class="px-4 py-3 font-semibold text-gray-600 min-w-[110px]">Status</th>
+                        <th class="px-4 py-3 text-center font-semibold text-gray-600 w-32">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-700">
@@ -241,24 +241,26 @@
                             <td class="px-4 py-3 text-gray-600">{{ $p->jabatan }}</td>
                             <td class="px-4 py-3">
                                 @if ($p->jenis_penilaian === 'kenaikan_jenjang')
-                                    <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">Kenaikan Jenjang</span>
+                                    <span class="inline-block whitespace-nowrap rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+                                        Kenaikan Jenjang
+                                    </span>
                                 @else
-                                    <span class="rounded-full bg-purple-100 px-3 py-1 text-xs font-semibold text-purple-700">Perpindahan Jabatan</span>
+                                    <span class="inline-block whitespace-nowrap rounded-full bg-purple-100 px-3 py-1 text-xs font-semibold text-purple-700">
+                                        Perpindahan Jabatan
+                                    </span>
                                 @endif
                             </td>
                             <td class="px-4 py-3">
                                 @if ($p->status === 'belum_dinilai')
-                                    <span class="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600">Belum Dinilai</span>
+                                    <span class="inline-block whitespace-nowrap rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600">Belum Dinilai</span>
                                 @elseif ($p->status === 'sedang_dinilai')
-                                    <span class="rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-orange-700">Sedang Dinilai</span>
+                                    <span class="inline-block whitespace-nowrap rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-orange-700">Sedang Dinilai</span>
                                 @else
-                                    <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">Selesai</span>
+                                    <span class="inline-block whitespace-nowrap rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">Selesai</span>
                                 @endif
                             </td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center justify-center gap-2">
-
-                                    {{-- Tombol Lihat Detail --}}
                                     <a href="{{ route('admin.peserta.detail', $p->id) }}"
                                        class="flex h-8 w-8 items-center justify-center rounded-lg border border-blue-200 bg-blue-50 text-blue-600 transition hover:bg-blue-100"
                                        title="Lihat Detail">
@@ -270,7 +272,6 @@
                                         </svg>
                                     </a>
 
-                                    {{-- Tombol Edit --}}
                                     <a href="{{ route('admin.peserta.edit', $p->id) }}"
                                        class="flex h-8 w-8 items-center justify-center rounded-lg border border-yellow-200 bg-yellow-50 text-yellow-600 transition hover:bg-yellow-100"
                                        title="Edit">
@@ -280,7 +281,6 @@
                                         </svg>
                                     </a>
 
-                                    {{-- Tombol Hapus --}}
                                     <button type="button" 
                                             onclick="konfirmasiHapusDashboard({{ $p->id }}, '{{ $p->nama }}')"
                                             class="flex h-8 w-8 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 transition hover:bg-red-100"
