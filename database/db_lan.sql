@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 30 Sep 2026 pada 05.52
+-- Waktu pembuatan: 02 Okt 2026 pada 13.01
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.4.11
 
@@ -133,7 +133,10 @@ INSERT INTO `login_pengujis` (`id`, `nama`, `email`, `username`, `password`, `ro
 (13, 'Satria Eka Tri Laksana, S.IP., M.AP', 'satria.laksana@lanri.go.id', 'satria.laksana', '$2y$12$Z4kLgN3Wsgr6EeRZQfV00e7HuQ99ijsR8.kdkS/LUVdlzyF.P.c.W', 'penguji', 'wawancara', NULL, NULL, 'Analis Kebijakan Ahli Muda', 'LAN PUSJAR SKMP', NULL, 1, NULL, NULL, '2026-09-28 17:38:31', '2026-09-28 18:14:01'),
 (14, 'Wahyuni Fajaruddin, S.H., M.H.', 'wahyuni.fajaruddin@lanri.go.id', 'wahyuni.f', '$2y$12$BZKJbiqQ5IXwoSpTZ9oT2eNQSaYPcTI40Kmxw6DqJ6h8CgWFWRtfO', 'penguji', 'wawancara', NULL, NULL, 'Analis Kebijakan Ahli Muda', 'LAN PUSJAR SKMP', NULL, 1, NULL, NULL, '2026-09-28 17:40:11', '2026-09-28 18:13:33'),
 (15, 'Ayun Sri Damayanti, S.H., M.H.', 'ayun.damayanti@lanri.go.id', 'ayun.damayanti', '$2y$12$rU0fEJHkNYKa1hTD3hIiPOeiBWURNP6VvjOhnNxh.gMESiZQ2V112', 'penguji', 'wawancara', NULL, NULL, 'Analis Kebijakan Ahli Muda', 'LAN PUSJAR SKMP', NULL, 1, NULL, NULL, '2026-09-28 17:43:16', '2026-09-28 18:13:22'),
-(16, 'Muhamad Ikbal Thola, S.Si., M.Si', 'muhamad.ikbal@lanri.go.id', 'muhamad.ikbal', '$2y$12$pHyyqsfbx35XdNB8ipHhqujAOfTtDOagFcmyFTRh21BJX4hCwnCcS', 'penguji', 'wawancara', NULL, NULL, 'Analis Kebijakan Ahli Muda', 'LAN PUSJAR SKMP', NULL, 1, NULL, NULL, '2026-09-28 17:44:33', '2026-09-28 18:13:10');
+(16, 'Muhamad Ikbal Thola, S.Si., M.Si', 'muhamad.ikbal@lanri.go.id', 'muhamad.ikbal', '$2y$12$pHyyqsfbx35XdNB8ipHhqujAOfTtDOagFcmyFTRh21BJX4hCwnCcS', 'penguji', 'wawancara', NULL, NULL, 'Analis Kebijakan Ahli Muda', 'LAN PUSJAR SKMP', NULL, 1, NULL, NULL, '2026-09-28 17:44:33', '2026-09-28 18:13:10'),
+(18, 'Dr. Novayanti Sopia Rukmana, S.Sos., M.Si', 'novayanti.sopia@lanri.go.id', 'novayanti.s', '$2y$12$Alu264thMrlQQt1yfKJ9Re5J9HISGA2SBshVK2qoQpmwB7zMwwAzq', 'penguji', 'tertulis', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2026-10-01 22:09:19', '2026-10-01 22:09:19'),
+(19, 'Dr. Didik Iskandar, S.Sos., M.Si', 'didik.iskandar@lanri.go.id', 'didik.i', '$2y$12$C47gQyLh7UWkeF3F3S1INuDndXIjBmbRObaln6xLSOsjHyeV6klTe', 'penguji', 'tertulis', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2026-10-01 22:10:31', '2026-10-01 22:10:31'),
+(20, 'Dr. Muh Tang Abdullah, S.Sos., M.AP', 'muh.tang@lanri.go.id', 'muh.tang', '$2y$12$nzYoszW1Thz9Z5Z0oJj/Levo/kqXeEpEgYahHXXGAl/wEocgoJ79.', 'penguji', 'tertulis', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2026-10-01 22:12:27', '2026-10-01 22:12:27');
 
 -- --------------------------------------------------------
 
@@ -197,7 +200,18 @@ INSERT INTO `nilai_finals` (`id`, `peserta_id`, `tipe`, `judul_unit`, `jenis_kom
 (16, 13, 'wawancara', 'Kemampuan Analisis', 'Kompetensi Inti', 84.75, 63.56, NULL, '2026-09-28 18:52:38', '2026-09-28 18:53:30'),
 (17, 13, 'wawancara', 'Kemampuan Analisis', 'Kompetensi Dasar', 86.25, 21.56, NULL, '2026-09-28 18:52:38', '2026-09-28 18:53:30'),
 (18, 13, 'wawancara', 'Kemampuan Politis', 'Kompetensi Inti+Spesialis', 81.43, 61.07, NULL, '2026-09-28 18:52:38', '2026-09-28 18:53:30'),
-(19, 13, 'wawancara', 'Kemampuan Politis', 'Kompetensi Dasar', 86.25, 21.56, NULL, '2026-09-28 18:52:38', '2026-09-28 18:53:30');
+(19, 13, 'wawancara', 'Kemampuan Politis', 'Kompetensi Dasar', 86.25, 21.56, NULL, '2026-09-28 18:52:38', '2026-09-28 18:53:30'),
+(20, 35, 'wawancara', 'Kemampuan Analisis', 'Kompetensi Inti', 82.38, 45.31, NULL, '2026-09-30 19:33:01', '2026-10-01 22:58:16'),
+(21, 35, 'wawancara', 'Kemampuan Analisis', 'Kompetensi Dasar', 83.25, 4.16, NULL, '2026-09-30 19:33:01', '2026-10-01 22:58:16'),
+(22, 35, 'wawancara', 'Kemampuan Politis', 'Kompetensi Inti+Spesialis', 84.57, 46.51, NULL, '2026-09-30 19:33:01', '2026-10-01 22:58:16'),
+(23, 35, 'wawancara', 'Kemampuan Politis', 'Kompetensi Dasar', 83.25, 4.16, NULL, '2026-09-30 19:33:01', '2026-10-01 22:58:16'),
+(24, 35, 'tertulis', 'Kemampuan Analisis', 'Kompetensi Inti', 84.00, 33.20, NULL, '2026-09-30 19:36:30', '2026-10-01 22:07:24'),
+(25, 35, 'tertulis', 'Kemampuan Analisis', 'Kompetensi Spesialis', 80.00, 33.20, NULL, '2026-09-30 19:36:30', '2026-10-01 22:07:24'),
+(26, 35, 'tertulis', 'Kemampuan Politis', 'Kompetensi Inti', 80.00, 32.00, NULL, '2026-09-30 19:36:30', '2026-10-01 22:07:24'),
+(27, 12, 'wawancara', 'Kemampuan Analisis', 'Kompetensi Inti', 84.50, 63.38, NULL, '2026-09-30 19:50:03', '2026-09-30 23:44:59'),
+(28, 12, 'wawancara', 'Kemampuan Analisis', 'Kompetensi Dasar', 83.25, 20.81, NULL, '2026-09-30 19:50:03', '2026-09-30 23:44:59'),
+(29, 12, 'wawancara', 'Kemampuan Politis', 'Kompetensi Inti+Spesialis', 76.86, 57.64, NULL, '2026-09-30 19:50:03', '2026-09-30 23:44:59'),
+(30, 12, 'wawancara', 'Kemampuan Politis', 'Kompetensi Dasar', 83.25, 20.81, NULL, '2026-09-30 19:50:03', '2026-09-30 23:44:59');
 
 -- --------------------------------------------------------
 
@@ -236,8 +250,12 @@ CREATE TABLE `penilaians` (
 INSERT INTO `penilaians` (`id`, `peserta_id`, `penilai_id`, `tipe`, `nilai`, `catatan`, `status`, `created_at`, `updated_at`) VALUES
 (9, 13, 12, 'wawancara', NULL, NULL, 'draft', '2026-09-28 18:46:19', '2026-09-28 18:54:16'),
 (10, 13, 13, 'wawancara', NULL, NULL, 'draft', '2026-09-28 18:46:28', '2026-09-28 18:54:40'),
-(11, 35, 17, 'wawancara', 90.00, NULL, 'draft', '2026-09-29 19:10:07', '2026-09-29 19:10:07'),
-(12, 35, 16, 'wawancara', 80.00, NULL, 'draft', '2026-09-29 19:33:00', '2026-09-29 19:33:02');
+(11, 35, 17, 'wawancara', 82.32, 'terimakasih', 'selesai', '2026-09-29 19:10:07', '2026-09-30 19:32:43'),
+(12, 35, 16, 'wawancara', 85.55, 'oke', 'selesai', '2026-09-29 19:33:00', '2026-09-30 19:33:36'),
+(14, 12, 12, 'wawancara', 81.36, 'oke', 'selesai', '2026-09-30 19:47:37', '2026-09-30 19:48:30'),
+(15, 12, 13, 'wawancara', 77.45, 'bagus', 'selesai', '2026-09-30 19:49:12', '2026-09-30 19:49:44'),
+(16, 30, 20, 'tertulis', 46.00, NULL, 'draft', '2026-10-01 22:28:57', '2026-10-01 22:28:57'),
+(17, 35, 20, 'tertulis', 82.40, 'bagus', 'selesai', '2026-10-01 22:31:05', '2026-10-01 22:33:55');
 
 -- --------------------------------------------------------
 
@@ -284,8 +302,61 @@ INSERT INTO `penilaian_details` (`id`, `peserta_id`, `penilai_id`, `tipe`, `urut
 (96, 13, 13, 'wawancara', 8, NULL, NULL, '2026-09-28 18:53:14', '2026-09-28 18:54:23'),
 (97, 13, 13, 'wawancara', 9, NULL, NULL, '2026-09-28 18:53:17', '2026-09-28 18:54:22'),
 (98, 13, 13, 'wawancara', 10, NULL, NULL, '2026-09-28 18:53:19', '2026-09-28 18:54:21'),
-(99, 35, 17, 'wawancara', 0, 90.00, NULL, '2026-09-29 19:10:07', '2026-09-29 19:10:07'),
-(100, 35, 16, 'wawancara', 0, 80.00, NULL, '2026-09-29 19:33:00', '2026-09-29 19:33:02');
+(99, 35, 17, 'wawancara', 0, 80.00, NULL, '2026-09-29 19:10:07', '2026-09-30 19:25:12'),
+(100, 35, 16, 'wawancara', 0, 85.00, NULL, '2026-09-29 19:33:00', '2026-09-30 19:27:05'),
+(101, 35, 17, 'wawancara', 1, 75.50, NULL, '2026-09-30 19:25:32', '2026-09-30 19:25:44'),
+(102, 35, 16, 'wawancara', 1, 89.00, NULL, '2026-09-30 19:27:12', '2026-09-30 19:27:24'),
+(103, 35, 17, 'wawancara', 2, 90.00, NULL, '2026-09-30 19:28:46', '2026-09-30 19:28:46'),
+(104, 35, 16, 'wawancara', 2, 78.00, NULL, '2026-09-30 19:28:49', '2026-09-30 19:28:49'),
+(105, 35, 17, 'wawancara', 3, 86.00, NULL, '2026-09-30 19:28:59', '2026-09-30 19:29:01'),
+(106, 35, 16, 'wawancara', 3, 75.00, NULL, '2026-09-30 19:29:04', '2026-09-30 19:29:04'),
+(107, 35, 17, 'wawancara', 4, 90.00, NULL, '2026-09-30 19:29:09', '2026-09-30 19:29:09'),
+(108, 35, 16, 'wawancara', 4, 90.00, NULL, '2026-09-30 19:29:12', '2026-09-30 19:29:12'),
+(109, 35, 17, 'wawancara', 5, 74.00, NULL, '2026-09-30 19:29:19', '2026-09-30 19:29:19'),
+(110, 35, 16, 'wawancara', 5, 87.00, NULL, '2026-09-30 19:29:22', '2026-09-30 19:29:23'),
+(111, 35, 17, 'wawancara', 6, 86.00, NULL, '2026-09-30 19:29:26', '2026-09-30 19:30:08'),
+(112, 35, 16, 'wawancara', 6, 90.00, NULL, '2026-09-30 19:29:48', '2026-09-30 19:30:04'),
+(113, 35, 17, 'wawancara', 7, 78.00, NULL, '2026-09-30 19:30:12', '2026-09-30 19:30:12'),
+(114, 35, 16, 'wawancara', 7, 87.00, NULL, '2026-09-30 19:30:16', '2026-09-30 19:30:16'),
+(115, 35, 17, 'wawancara', 8, 89.00, NULL, '2026-09-30 19:30:19', '2026-09-30 19:30:19'),
+(116, 35, 16, 'wawancara', 8, 84.00, NULL, '2026-09-30 19:30:22', '2026-09-30 19:30:26'),
+(117, 35, 17, 'wawancara', 9, 68.00, NULL, '2026-09-30 19:30:29', '2026-09-30 19:30:29'),
+(118, 35, 16, 'wawancara', 9, 98.00, NULL, '2026-09-30 19:30:31', '2026-09-30 19:30:31'),
+(119, 35, 17, 'wawancara', 10, 89.00, NULL, '2026-09-30 19:30:36', '2026-09-30 19:30:36'),
+(120, 35, 16, 'wawancara', 10, 78.00, NULL, '2026-09-30 19:30:38', '2026-09-30 19:30:38'),
+(121, 35, 12, 'tertulis', 0, 90.00, NULL, '2026-09-30 19:35:34', '2026-10-01 22:06:39'),
+(122, 35, 12, 'tertulis', 1, 75.00, NULL, '2026-09-30 19:35:36', '2026-10-01 22:06:47'),
+(123, 35, 12, 'tertulis', 2, 87.00, NULL, '2026-09-30 19:35:39', '2026-10-01 22:06:55'),
+(124, 35, 12, 'tertulis', 3, 80.00, NULL, '2026-09-30 19:35:43', '2026-10-01 22:07:01'),
+(125, 35, 12, 'tertulis', 4, 80.00, NULL, '2026-09-30 19:35:45', '2026-10-01 22:07:07'),
+(126, 12, 12, 'wawancara', 0, 87.00, NULL, '2026-09-30 19:47:37', '2026-09-30 19:47:45'),
+(127, 12, 12, 'wawancara', 1, 98.00, NULL, '2026-09-30 19:47:48', '2026-09-30 19:47:48'),
+(128, 12, 12, 'wawancara', 2, 78.00, NULL, '2026-09-30 19:47:50', '2026-09-30 19:47:52'),
+(129, 12, 12, 'wawancara', 3, 90.00, NULL, '2026-09-30 19:47:55', '2026-09-30 19:48:04'),
+(130, 12, 12, 'wawancara', 4, 76.00, NULL, '2026-09-30 19:48:07', '2026-09-30 19:48:07'),
+(131, 12, 12, 'wawancara', 5, 84.00, NULL, '2026-09-30 19:48:09', '2026-09-30 19:48:10'),
+(132, 12, 12, 'wawancara', 6, 78.00, NULL, '2026-09-30 19:48:12', '2026-09-30 19:48:12'),
+(133, 12, 12, 'wawancara', 7, 98.00, NULL, '2026-09-30 19:48:16', '2026-09-30 19:48:16'),
+(134, 12, 12, 'wawancara', 8, 66.00, NULL, '2026-09-30 19:48:18', '2026-09-30 19:48:18'),
+(135, 12, 12, 'wawancara', 9, 70.00, NULL, '2026-09-30 19:48:20', '2026-09-30 19:48:20'),
+(136, 12, 12, 'wawancara', 10, 70.00, NULL, '2026-09-30 19:48:24', '2026-09-30 19:48:24'),
+(137, 12, 13, 'wawancara', 0, 98.00, NULL, '2026-09-30 19:49:12', '2026-09-30 19:49:12'),
+(138, 12, 13, 'wawancara', 1, 55.00, NULL, '2026-09-30 19:49:14', '2026-09-30 19:49:14'),
+(139, 12, 13, 'wawancara', 2, 60.00, NULL, '2026-09-30 19:49:16', '2026-09-30 19:49:16'),
+(140, 12, 13, 'wawancara', 3, 70.00, NULL, '2026-09-30 19:49:18', '2026-09-30 19:49:18'),
+(141, 12, 13, 'wawancara', 4, 88.00, NULL, '2026-09-30 19:49:19', '2026-09-30 19:49:19'),
+(142, 12, 13, 'wawancara', 5, 69.00, NULL, '2026-09-30 19:49:23', '2026-09-30 19:49:23'),
+(143, 12, 13, 'wawancara', 6, 77.00, NULL, '2026-09-30 19:49:24', '2026-09-30 19:49:24'),
+(144, 12, 13, 'wawancara', 7, 86.00, NULL, '2026-09-30 19:49:27', '2026-09-30 19:49:28'),
+(145, 12, 13, 'wawancara', 8, 56.00, NULL, '2026-09-30 19:49:30', '2026-09-30 19:49:30'),
+(146, 12, 13, 'wawancara', 9, 98.00, NULL, '2026-09-30 19:49:32', '2026-09-30 19:49:32'),
+(147, 12, 13, 'wawancara', 10, 95.00, NULL, '2026-09-30 19:49:36', '2026-09-30 19:49:38'),
+(148, 30, 20, 'tertulis', 4, 46.00, NULL, '2026-10-01 22:28:57', '2026-10-01 22:28:57'),
+(149, 35, 20, 'tertulis', 0, 90.00, NULL, '2026-10-01 22:31:05', '2026-10-01 22:31:05'),
+(150, 35, 20, 'tertulis', 1, 75.00, NULL, '2026-10-01 22:31:09', '2026-10-01 22:31:10'),
+(151, 35, 20, 'tertulis', 2, 87.00, NULL, '2026-10-01 22:31:22', '2026-10-01 22:31:22'),
+(152, 35, 20, 'tertulis', 3, 80.00, NULL, '2026-10-01 22:31:25', '2026-10-01 22:31:25'),
+(153, 35, 20, 'tertulis', 4, 80.00, NULL, '2026-10-01 22:31:28', '2026-10-01 22:31:28');
 
 -- --------------------------------------------------------
 
@@ -316,12 +387,15 @@ CREATE TABLE `penilais` (
 --
 
 INSERT INTO `penilais` (`id`, `login_penguji_id`, `nama`, `email`, `username`, `password`, `nip`, `jabatan`, `instansi`, `is_wawancara`, `is_tertulis`, `keterangan`, `is_active`, `created_at`, `updated_at`) VALUES
-(12, 11, 'Dr. Muhammad Aswad, M.Si', 'muhammad.aswad@lanri.go.id', 'm.aswad', '$2y$12$IVnEYI77sMhrC9xHy5HLmOP1K/DGm.eixCyf4J/gVHd2A/C7plnZy', NULL, 'Kepala PUSJAR SKMP', 'LAN PUSJAR SKMP', 1, 1, NULL, 1, '2026-09-28 17:33:02', '2026-09-28 17:33:02'),
-(13, 12, 'Zulchaidir, S.Sos., MPA', 'zulchaidir@lanri.go.id', 'zulchaidir', '$2y$12$Qlt4xb8.C9ije76gWkkCiOIeyExVczSLjpzm.fUnxv4nw9GsNIjqS', NULL, 'Kepala Bagian Umum PUSJAR SKMP', 'LAN PUSJAR SKMP', 1, 1, NULL, 1, '2026-09-28 17:34:56', '2026-09-28 17:34:56'),
+(12, 11, 'Dr. Muhammad Aswad, M.Si', 'muhammad.aswad@lanri.go.id', 'm.aswad', '$2y$12$IVnEYI77sMhrC9xHy5HLmOP1K/DGm.eixCyf4J/gVHd2A/C7plnZy', NULL, 'Kepala PUSJAR SKMP', 'LAN PUSJAR SKMP', 1, 0, NULL, 1, '2026-09-28 17:33:02', '2026-10-01 22:24:13'),
+(13, 12, 'Zulchaidir, S.Sos., MPA', 'zulchaidir@lanri.go.id', 'zulchaidir', '$2y$12$Qlt4xb8.C9ije76gWkkCiOIeyExVczSLjpzm.fUnxv4nw9GsNIjqS', NULL, 'Kepala Bagian Umum PUSJAR SKMP', 'LAN PUSJAR SKMP', 1, 0, NULL, 1, '2026-09-28 17:34:56', '2026-10-01 22:01:59'),
 (14, 13, 'Satria Eka Tri Laksana, S.IP., M.AP', 'satria.laksana@lanri.go.id', 'satria.laksana', '$2y$12$Z4kLgN3Wsgr6EeRZQfV00e7HuQ99ijsR8.kdkS/LUVdlzyF.P.c.W', NULL, 'Analis Kebijakan Ahli Muda', 'LAN PUSJAR SKMP', 1, 0, NULL, 1, '2026-09-28 17:38:31', '2026-09-28 18:14:01'),
 (15, 14, 'Wahyuni Fajaruddin, S.H., M.H.', 'wahyuni.fajaruddin@lanri.go.id', 'wahyuni.f', '$2y$12$BZKJbiqQ5IXwoSpTZ9oT2eNQSaYPcTI40Kmxw6DqJ6h8CgWFWRtfO', NULL, 'Analis Kebijakan Ahli Muda', 'LAN PUSJAR SKMP', 1, 0, NULL, 1, '2026-09-28 17:40:11', '2026-09-28 18:13:33'),
 (16, 15, 'Ayun Sri Damayanti, S.H., M.H.', 'ayun.damayanti@lanri.go.id', 'ayun.damayanti', '$2y$12$rU0fEJHkNYKa1hTD3hIiPOeiBWURNP6VvjOhnNxh.gMESiZQ2V112', NULL, 'Analis Kebijakan Ahli Muda', 'LAN PUSJAR SKMP', 1, 0, NULL, 1, '2026-09-28 17:43:16', '2026-09-28 18:13:22'),
-(17, 16, 'Muhamad Ikbal Thola, S.Si., M.Si', 'muhamad.ikbal@lanri.go.id', 'muhamad.ikbal', '$2y$12$pHyyqsfbx35XdNB8ipHhqujAOfTtDOagFcmyFTRh21BJX4hCwnCcS', NULL, 'Analis Kebijakan Ahli Muda', 'LAN PUSJAR SKMP', 1, 0, NULL, 1, '2026-09-28 17:44:33', '2026-09-28 18:13:10');
+(17, 16, 'Muhamad Ikbal Thola, S.Si., M.Si', 'muhamad.ikbal@lanri.go.id', 'muhamad.ikbal', '$2y$12$pHyyqsfbx35XdNB8ipHhqujAOfTtDOagFcmyFTRh21BJX4hCwnCcS', NULL, 'Analis Kebijakan Ahli Muda', 'LAN PUSJAR SKMP', 1, 0, NULL, 1, '2026-09-28 17:44:33', '2026-09-28 18:13:10'),
+(19, 18, 'Dr. Novayanti Sopia Rukmana, S.Sos., M.Si', 'novayanti.sopia@lanri.go.id', 'novayanti.s', '$2y$12$Alu264thMrlQQt1yfKJ9Re5J9HISGA2SBshVK2qoQpmwB7zMwwAzq', NULL, NULL, NULL, 0, 1, NULL, 1, '2026-10-01 22:09:19', '2026-10-01 22:09:19'),
+(20, 19, 'Dr. Didik Iskandar, S.Sos., M.Si', 'didik.iskandar@lanri.go.id', 'didik.i', '$2y$12$C47gQyLh7UWkeF3F3S1INuDndXIjBmbRObaln6xLSOsjHyeV6klTe', NULL, NULL, NULL, 0, 1, NULL, 1, '2026-10-01 22:10:31', '2026-10-01 22:10:31'),
+(21, 20, 'Dr. Muh Tang Abdullah, S.Sos., M.AP', 'muh.tang@lanri.go.id', 'muh.tang', '$2y$12$nzYoszW1Thz9Z5Z0oJj/Levo/kqXeEpEgYahHXXGAl/wEocgoJ79.', NULL, NULL, NULL, 0, 1, NULL, 1, '2026-10-01 22:12:28', '2026-10-01 22:12:28');
 
 -- --------------------------------------------------------
 
@@ -345,69 +419,6 @@ CREATE TABLE `penugasan_penilais` (
 --
 
 INSERT INTO `penugasan_penilais` (`id`, `peserta_id`, `penilai_id`, `login_penguji_id`, `tipe`, `urutan`, `created_at`, `updated_at`) VALUES
-(75, 23, 14, 13, 'wawancara', 1, '2026-09-29 15:42:20', '2026-09-29 15:42:20'),
-(76, 23, 15, 14, 'wawancara', 2, '2026-09-29 15:42:20', '2026-09-29 15:42:20'),
-(77, 23, 12, 11, 'tertulis', 1, '2026-09-29 15:42:20', '2026-09-29 15:42:20'),
-(78, 35, 16, 15, 'wawancara', 1, '2026-09-29 15:46:43', '2026-09-29 15:46:43'),
-(79, 35, 17, 16, 'wawancara', 2, '2026-09-29 15:46:43', '2026-09-29 15:46:43'),
-(80, 35, 12, 11, 'tertulis', 1, '2026-09-29 15:46:43', '2026-09-29 15:46:43'),
-(81, 36, 16, 15, 'wawancara', 1, '2026-09-29 15:49:47', '2026-09-29 15:49:47'),
-(82, 36, 17, 16, 'wawancara', 2, '2026-09-29 15:49:47', '2026-09-29 15:49:47'),
-(83, 36, 12, 11, 'tertulis', 1, '2026-09-29 15:49:47', '2026-09-29 15:49:47'),
-(84, 37, 16, 15, 'wawancara', 1, '2026-09-29 15:50:55', '2026-09-29 15:50:55'),
-(85, 37, 17, 16, 'wawancara', 2, '2026-09-29 15:50:55', '2026-09-29 15:50:55'),
-(86, 37, 12, 11, 'tertulis', 1, '2026-09-29 15:50:55', '2026-09-29 15:50:55'),
-(87, 38, 16, 15, 'wawancara', 1, '2026-09-29 15:52:13', '2026-09-29 15:52:13'),
-(88, 38, 17, 16, 'wawancara', 2, '2026-09-29 15:52:13', '2026-09-29 15:52:13'),
-(89, 38, 12, 11, 'tertulis', 1, '2026-09-29 15:52:13', '2026-09-29 15:52:13'),
-(90, 39, 16, 15, 'wawancara', 1, '2026-09-29 16:04:04', '2026-09-29 16:04:04'),
-(91, 39, 17, 16, 'wawancara', 2, '2026-09-29 16:04:04', '2026-09-29 16:04:04'),
-(92, 39, 12, 11, 'tertulis', 1, '2026-09-29 16:04:04', '2026-09-29 16:04:04'),
-(93, 40, 16, 15, 'wawancara', 1, '2026-09-29 16:05:29', '2026-09-29 16:05:29'),
-(94, 40, 17, 16, 'wawancara', 2, '2026-09-29 16:05:29', '2026-09-29 16:05:29'),
-(95, 40, 12, 11, 'tertulis', 1, '2026-09-29 16:05:29', '2026-09-29 16:05:29'),
-(96, 41, 16, 15, 'wawancara', 1, '2026-09-29 16:06:37', '2026-09-29 16:06:37'),
-(97, 41, 17, 16, 'wawancara', 2, '2026-09-29 16:06:37', '2026-09-29 16:06:37'),
-(98, 41, 12, 11, 'tertulis', 1, '2026-09-29 16:06:37', '2026-09-29 16:06:37'),
-(99, 25, 14, 13, 'wawancara', 1, '2026-09-29 16:08:05', '2026-09-29 16:08:05'),
-(100, 25, 15, 14, 'wawancara', 2, '2026-09-29 16:08:05', '2026-09-29 16:08:05'),
-(101, 25, 12, 11, 'tertulis', 1, '2026-09-29 16:08:05', '2026-09-29 16:08:05'),
-(102, 26, 14, 13, 'wawancara', 1, '2026-09-29 16:08:43', '2026-09-29 16:08:43'),
-(103, 26, 15, 14, 'wawancara', 2, '2026-09-29 16:08:43', '2026-09-29 16:08:43'),
-(104, 26, 12, 11, 'tertulis', 1, '2026-09-29 16:08:43', '2026-09-29 16:08:43'),
-(105, 27, 14, 13, 'wawancara', 1, '2026-09-29 16:09:16', '2026-09-29 16:09:16'),
-(106, 27, 15, 14, 'wawancara', 2, '2026-09-29 16:09:16', '2026-09-29 16:09:16'),
-(107, 27, 12, 11, 'tertulis', 1, '2026-09-29 16:09:16', '2026-09-29 16:09:16'),
-(108, 32, 16, 15, 'wawancara', 1, '2026-09-29 16:10:06', '2026-09-29 16:10:06'),
-(109, 32, 17, 16, 'wawancara', 2, '2026-09-29 16:10:06', '2026-09-29 16:10:06'),
-(110, 32, 12, 11, 'tertulis', 1, '2026-09-29 16:10:06', '2026-09-29 16:10:06'),
-(111, 29, 14, 13, 'wawancara', 1, '2026-09-29 16:10:42', '2026-09-29 16:10:42'),
-(112, 29, 15, 14, 'wawancara', 2, '2026-09-29 16:10:42', '2026-09-29 16:10:42'),
-(113, 29, 12, 11, 'tertulis', 1, '2026-09-29 16:10:42', '2026-09-29 16:10:42'),
-(114, 42, 14, 13, 'wawancara', 1, '2026-09-29 16:15:21', '2026-09-29 16:15:21'),
-(115, 42, 15, 14, 'wawancara', 2, '2026-09-29 16:15:21', '2026-09-29 16:15:21'),
-(116, 42, 12, 11, 'tertulis', 1, '2026-09-29 16:15:21', '2026-09-29 16:15:21'),
-(117, 30, 14, 13, 'wawancara', 1, '2026-09-29 16:16:04', '2026-09-29 16:16:04'),
-(118, 30, 15, 14, 'wawancara', 2, '2026-09-29 16:16:04', '2026-09-29 16:16:04'),
-(119, 30, 12, 11, 'tertulis', 1, '2026-09-29 16:16:04', '2026-09-29 16:16:04'),
-(120, 31, 14, 13, 'wawancara', 1, '2026-09-29 16:22:38', '2026-09-29 16:22:38'),
-(121, 31, 15, 14, 'wawancara', 2, '2026-09-29 16:22:38', '2026-09-29 16:22:38'),
-(122, 31, 12, 11, 'tertulis', 1, '2026-09-29 16:22:38', '2026-09-29 16:22:38'),
-(123, 28, 14, 13, 'wawancara', 1, '2026-09-29 16:23:18', '2026-09-29 16:23:18'),
-(124, 28, 15, 14, 'wawancara', 2, '2026-09-29 16:23:18', '2026-09-29 16:23:18'),
-(125, 28, 12, 11, 'tertulis', 1, '2026-09-29 16:23:18', '2026-09-29 16:23:18'),
-(126, 33, 16, 15, 'wawancara', 1, '2026-09-29 16:23:44', '2026-09-29 16:23:44'),
-(127, 33, 17, 16, 'wawancara', 2, '2026-09-29 16:23:44', '2026-09-29 16:23:44'),
-(128, 33, 12, 11, 'tertulis', 1, '2026-09-29 16:23:44', '2026-09-29 16:23:44'),
-(129, 34, 16, 15, 'wawancara', 1, '2026-09-29 16:24:09', '2026-09-29 16:24:09'),
-(130, 34, 17, 16, 'wawancara', 2, '2026-09-29 16:24:09', '2026-09-29 16:24:09'),
-(131, 34, 12, 11, 'tertulis', 1, '2026-09-29 16:24:09', '2026-09-29 16:24:09'),
-(132, 20, 12, 11, 'wawancara', 1, '2026-09-29 16:25:00', '2026-09-29 16:25:00'),
-(133, 20, 13, 12, 'wawancara', 2, '2026-09-29 16:25:00', '2026-09-29 16:25:00'),
-(134, 20, 12, 11, 'tertulis', 1, '2026-09-29 16:25:00', '2026-09-29 16:25:00'),
-(135, 21, 12, 11, 'wawancara', 1, '2026-09-29 16:25:24', '2026-09-29 16:25:24'),
-(136, 21, 13, 12, 'wawancara', 2, '2026-09-29 16:25:24', '2026-09-29 16:25:24'),
-(137, 21, 12, 11, 'tertulis', 1, '2026-09-29 16:25:24', '2026-09-29 16:25:24'),
 (138, 12, 12, 11, 'wawancara', 1, '2026-09-29 16:26:11', '2026-09-29 16:26:11'),
 (139, 12, 13, 12, 'wawancara', 2, '2026-09-29 16:26:11', '2026-09-29 16:26:11'),
 (140, 13, 12, 11, 'wawancara', 1, '2026-09-29 16:26:47', '2026-09-29 16:26:47'),
@@ -422,14 +433,77 @@ INSERT INTO `penugasan_penilais` (`id`, `peserta_id`, `penilai_id`, `login_pengu
 (149, 17, 13, 12, 'wawancara', 2, '2026-09-29 16:29:58', '2026-09-29 16:29:58'),
 (150, 19, 12, 11, 'wawancara', 1, '2026-09-29 16:30:28', '2026-09-29 16:30:28'),
 (151, 19, 13, 12, 'wawancara', 2, '2026-09-29 16:30:28', '2026-09-29 16:30:28'),
-(152, 24, 14, 13, 'wawancara', 1, '2026-09-29 16:32:33', '2026-09-29 16:32:33'),
-(153, 24, 15, 14, 'wawancara', 2, '2026-09-29 16:32:33', '2026-09-29 16:32:33'),
-(154, 24, 12, 11, 'tertulis', 1, '2026-09-29 16:32:33', '2026-09-29 16:32:33'),
-(155, 22, 12, 11, 'wawancara', 1, '2026-09-29 16:34:08', '2026-09-29 16:34:08'),
-(156, 22, 13, 12, 'wawancara', 2, '2026-09-29 16:34:08', '2026-09-29 16:34:08'),
-(157, 22, 12, 11, 'tertulis', 1, '2026-09-29 16:34:08', '2026-09-29 16:34:08'),
 (158, 18, 12, 11, 'wawancara', 1, '2026-09-29 16:35:06', '2026-09-29 16:35:06'),
-(159, 18, 13, 12, 'wawancara', 2, '2026-09-29 16:35:06', '2026-09-29 16:35:06');
+(159, 18, 13, 12, 'wawancara', 2, '2026-09-29 16:35:06', '2026-09-29 16:35:06'),
+(163, 23, 14, 13, 'wawancara', 1, '2026-10-01 22:14:02', '2026-10-01 22:14:02'),
+(164, 23, 15, 14, 'wawancara', 2, '2026-10-01 22:14:02', '2026-10-01 22:14:02'),
+(165, 23, 19, 18, 'tertulis', 1, '2026-10-01 22:14:02', '2026-10-01 22:14:02'),
+(169, 25, 14, 13, 'wawancara', 1, '2026-10-01 22:15:04', '2026-10-01 22:15:04'),
+(170, 25, 15, 14, 'wawancara', 2, '2026-10-01 22:15:04', '2026-10-01 22:15:04'),
+(171, 25, 19, 18, 'tertulis', 1, '2026-10-01 22:15:04', '2026-10-01 22:15:04'),
+(172, 26, 14, 13, 'wawancara', 1, '2026-10-01 22:15:26', '2026-10-01 22:15:26'),
+(173, 26, 15, 14, 'wawancara', 2, '2026-10-01 22:15:26', '2026-10-01 22:15:26'),
+(174, 26, 19, 18, 'tertulis', 1, '2026-10-01 22:15:26', '2026-10-01 22:15:26'),
+(175, 27, 14, 13, 'wawancara', 1, '2026-10-01 22:15:56', '2026-10-01 22:15:56'),
+(176, 27, 15, 14, 'wawancara', 2, '2026-10-01 22:15:56', '2026-10-01 22:15:56'),
+(177, 27, 19, 18, 'tertulis', 1, '2026-10-01 22:15:56', '2026-10-01 22:15:56'),
+(181, 29, 14, 13, 'wawancara', 1, '2026-10-01 22:16:37', '2026-10-01 22:16:37'),
+(182, 29, 15, 14, 'wawancara', 2, '2026-10-01 22:16:37', '2026-10-01 22:16:37'),
+(183, 29, 19, 18, 'tertulis', 1, '2026-10-01 22:16:37', '2026-10-01 22:16:37'),
+(184, 42, 14, 13, 'wawancara', 1, '2026-10-01 22:16:57', '2026-10-01 22:16:57'),
+(185, 42, 15, 14, 'wawancara', 2, '2026-10-01 22:16:57', '2026-10-01 22:16:57'),
+(186, 42, 19, 18, 'tertulis', 1, '2026-10-01 22:16:57', '2026-10-01 22:16:57'),
+(187, 30, 14, 13, 'wawancara', 1, '2026-10-01 22:17:39', '2026-10-01 22:17:39'),
+(188, 30, 15, 14, 'wawancara', 2, '2026-10-01 22:17:39', '2026-10-01 22:17:39'),
+(189, 30, 20, 19, 'tertulis', 1, '2026-10-01 22:17:39', '2026-10-01 22:17:39'),
+(190, 31, 14, 13, 'wawancara', 1, '2026-10-01 22:17:55', '2026-10-01 22:17:55'),
+(191, 31, 15, 14, 'wawancara', 2, '2026-10-01 22:17:55', '2026-10-01 22:17:55'),
+(192, 31, 20, 19, 'tertulis', 1, '2026-10-01 22:17:55', '2026-10-01 22:17:55'),
+(193, 28, 14, 13, 'wawancara', 1, '2026-10-01 22:18:12', '2026-10-01 22:18:12'),
+(194, 28, 15, 14, 'wawancara', 2, '2026-10-01 22:18:12', '2026-10-01 22:18:12'),
+(195, 28, 20, 19, 'tertulis', 1, '2026-10-01 22:18:12', '2026-10-01 22:18:12'),
+(202, 35, 17, 16, 'wawancara', 1, '2026-10-01 22:19:20', '2026-10-01 22:19:20'),
+(203, 35, 16, 15, 'wawancara', 2, '2026-10-01 22:19:20', '2026-10-01 22:19:20'),
+(204, 35, 20, 19, 'tertulis', 1, '2026-10-01 22:19:20', '2026-10-01 22:19:20'),
+(205, 20, 12, 11, 'wawancara', 1, '2026-10-01 22:19:40', '2026-10-01 22:19:40'),
+(206, 20, 13, 12, 'wawancara', 2, '2026-10-01 22:19:40', '2026-10-01 22:19:40'),
+(207, 20, 20, 19, 'tertulis', 1, '2026-10-01 22:19:40', '2026-10-01 22:19:40'),
+(208, 21, 12, 11, 'wawancara', 1, '2026-10-01 22:20:11', '2026-10-01 22:20:11'),
+(209, 21, 13, 12, 'wawancara', 2, '2026-10-01 22:20:11', '2026-10-01 22:20:11'),
+(210, 21, 20, 19, 'tertulis', 1, '2026-10-01 22:20:11', '2026-10-01 22:20:11'),
+(217, 24, 14, 13, 'wawancara', 1, '2026-10-01 22:21:43', '2026-10-01 22:21:43'),
+(218, 24, 15, 14, 'wawancara', 2, '2026-10-01 22:21:43', '2026-10-01 22:21:43'),
+(219, 24, 21, 20, 'tertulis', 1, '2026-10-01 22:21:43', '2026-10-01 22:21:43'),
+(220, 39, 17, 16, 'wawancara', 1, '2026-10-01 22:22:16', '2026-10-01 22:22:16'),
+(221, 39, 16, 15, 'wawancara', 2, '2026-10-01 22:22:16', '2026-10-01 22:22:16'),
+(222, 39, 21, 20, 'tertulis', 1, '2026-10-01 22:22:16', '2026-10-01 22:22:16'),
+(223, 40, 17, 16, 'wawancara', 1, '2026-10-01 22:22:50', '2026-10-01 22:22:50'),
+(224, 40, 16, 15, 'wawancara', 2, '2026-10-01 22:22:50', '2026-10-01 22:22:50'),
+(225, 40, 21, 20, 'tertulis', 1, '2026-10-01 22:22:50', '2026-10-01 22:22:50'),
+(226, 41, 17, 16, 'wawancara', 1, '2026-10-01 22:23:16', '2026-10-01 22:23:16'),
+(227, 41, 16, 15, 'wawancara', 2, '2026-10-01 22:23:16', '2026-10-01 22:23:16'),
+(228, 41, 21, 20, 'tertulis', 1, '2026-10-01 22:23:16', '2026-10-01 22:23:16'),
+(229, 22, 12, 11, 'wawancara', 1, '2026-10-01 22:23:48', '2026-10-01 22:23:48'),
+(230, 22, 13, 12, 'wawancara', 2, '2026-10-01 22:23:48', '2026-10-01 22:23:48'),
+(231, 22, 21, 20, 'tertulis', 1, '2026-10-01 22:23:48', '2026-10-01 22:23:48'),
+(232, 38, 17, 16, 'wawancara', 1, '2026-10-01 22:24:52', '2026-10-01 22:24:52'),
+(233, 38, 16, 15, 'wawancara', 2, '2026-10-01 22:24:52', '2026-10-01 22:24:52'),
+(234, 38, 19, 18, 'tertulis', 1, '2026-10-01 22:24:52', '2026-10-01 22:24:52'),
+(235, 37, 17, 16, 'wawancara', 1, '2026-10-01 22:25:10', '2026-10-01 22:25:10'),
+(236, 37, 16, 15, 'wawancara', 2, '2026-10-01 22:25:10', '2026-10-01 22:25:10'),
+(237, 37, 21, 20, 'tertulis', 1, '2026-10-01 22:25:10', '2026-10-01 22:25:10'),
+(238, 36, 17, 16, 'wawancara', 1, '2026-10-01 22:25:29', '2026-10-01 22:25:29'),
+(239, 36, 16, 15, 'wawancara', 2, '2026-10-01 22:25:29', '2026-10-01 22:25:29'),
+(240, 36, 21, 20, 'tertulis', 1, '2026-10-01 22:25:29', '2026-10-01 22:25:29'),
+(241, 34, 17, 16, 'wawancara', 1, '2026-10-01 22:25:53', '2026-10-01 22:25:53'),
+(242, 34, 16, 15, 'wawancara', 2, '2026-10-01 22:25:53', '2026-10-01 22:25:53'),
+(243, 34, 20, 19, 'tertulis', 1, '2026-10-01 22:25:53', '2026-10-01 22:25:53'),
+(247, 33, 17, 16, 'wawancara', 1, '2026-10-01 22:26:08', '2026-10-01 22:26:08'),
+(248, 33, 16, 15, 'wawancara', 2, '2026-10-01 22:26:08', '2026-10-01 22:26:08'),
+(249, 33, 20, 19, 'tertulis', 1, '2026-10-01 22:26:08', '2026-10-01 22:26:08'),
+(250, 32, 17, 16, 'wawancara', 1, '2026-10-01 22:26:25', '2026-10-01 22:26:25'),
+(251, 32, 16, 15, 'wawancara', 2, '2026-10-01 22:26:25', '2026-10-01 22:26:25'),
+(252, 32, 19, 18, 'tertulis', 1, '2026-10-01 22:26:25', '2026-10-01 22:26:25');
 
 -- --------------------------------------------------------
 
@@ -455,7 +529,7 @@ CREATE TABLE `pesertas` (
 --
 
 INSERT INTO `pesertas` (`id`, `nama`, `nip`, `jabatan`, `instansi`, `jenis_penilaian`, `status`, `link_berkas`, `created_at`, `updated_at`) VALUES
-(12, 'Putu Marini, S.STP., M.A.P', NULL, 'Analis Kebijakan Ahli Muda', 'Pemerintah Kabupaten Badung', 'kenaikan_jenjang', 'belum_dinilai', 'https://bit.ly/BerkasKelengkapanUjiKompetensiJFAKTahun20261', '2026-09-28 17:55:07', '2026-09-29 16:26:11'),
+(12, 'Putu Marini, S.STP., M.A.P', NULL, 'Analis Kebijakan Ahli Muda', 'Pemerintah Kabupaten Badung', 'kenaikan_jenjang', 'selesai', 'https://bit.ly/BerkasKelengkapanUjiKompetensiJFAKTahun20261', '2026-09-28 17:55:07', '2026-09-30 19:49:44'),
 (13, 'Arman Syam, S.Sos., M.M', NULL, 'Analis Kebijakan Ahli Muda', 'Pemerintah Kabupaten Luwu Timur', 'kenaikan_jenjang', 'belum_dinilai', 'https://drive.google.com/drive/folders/1mXktAoyq-guXHz-4BLGhPLfPMt-x-bIZ', '2026-09-28 18:05:45', '2026-09-29 16:26:47'),
 (14, 'Nieke Roslina Dewi,SE.,M.Si', NULL, 'Analis Kebijakan Ahli Pertama', 'Pemerintah Provinsi Bali', 'kenaikan_jenjang', 'belum_dinilai', 'https://drive.google.com/drive/folders/1GW7nKBbx4LZHg-gg4CPNPryWxHK8uP_n?usp=drive_link', '2026-09-28 18:06:57', '2026-09-29 16:27:14'),
 (15, 'Putu Harry Krisnawan, ST, M.Si', NULL, 'Analis Kebijakan Ahli Pertama', 'Pemerintah Provinsi Bali', 'kenaikan_jenjang', 'belum_dinilai', 'https://bit.ly/FormulirUKOM_AKMuda', '2026-09-28 18:08:08', '2026-09-29 16:27:45'),
@@ -478,7 +552,7 @@ INSERT INTO `pesertas` (`id`, `nama`, `nip`, `jabatan`, `instansi`, `jenis_penil
 (32, 'Idham Chalik, S.STP', NULL, 'Penelaah Teknis Kebijakan', 'Pemerintah Provinsi Sulawesi Tenggara', 'perpindahan_jabatan', 'belum_dinilai', 'https://drive.google.com/drive/folders/1hIRCEDNHAWUMoA-9H7gMDhCHJsRcqZdM?usp=drive_link', '2026-09-28 22:39:54', '2026-09-29 16:10:06'),
 (33, 'Wira Setyawan Rahman, S.A.P', NULL, 'Penelaah Teknis Kebijakan', 'Pemerintah Kabupaten Luwu Timur', 'perpindahan_jabatan', 'belum_dinilai', 'https://drive.google.com/drive/folders/1zL_JT2QzJteSnwqamauoJNtGaZxMsBEV?usp=sharing', '2026-09-28 22:59:47', '2026-09-29 16:23:44'),
 (34, 'Mila Karmila, S.IP', NULL, 'Penelaah Teknis Kebijakan', 'Pemerintah Provinsi Sulawesi Tenggara', 'perpindahan_jabatan', 'belum_dinilai', 'https://drive.google.com/drive/folders/1E2ydLSwg4wpfuZEIuGwsOGMM7nbHEc4v?usp=drive_link', '2026-09-28 23:02:33', '2026-09-29 16:24:09'),
-(35, 'Tito Saputra, S.STP,.M.E', NULL, 'Pelaksana', 'Pemerintah Kota Kotamobagu', 'perpindahan_jabatan', 'belum_dinilai', 'https://drive.google.com/drive/folders/1r8zyDMHyf7PEpVp9hw9VsVIIfERgpC0P', '2026-09-29 15:46:43', '2026-09-29 15:46:43'),
+(35, 'Tito Saputra, S.STP,.M.E', NULL, 'Pelaksana', 'Pemerintah Kota Kotamobagu', 'perpindahan_jabatan', 'selesai', 'https://drive.google.com/drive/folders/1r8zyDMHyf7PEpVp9hw9VsVIIfERgpC0P', '2026-09-29 15:46:43', '2026-10-01 22:33:55'),
 (36, 'Almira Dhamara Tyasari, S.S.T (TD), M.Sc.', NULL, 'Penelaah Teknis Kebijakan', 'Pemerintah Provinsi Nusa Tenggara Barat', 'perpindahan_jabatan', 'belum_dinilai', 'https://drive.google.com/drive/folders/1OcEgg_M8c9ECQM-vadIPNTUjIu1hhEPn?usp=drive_link', '2026-09-29 15:49:47', '2026-09-29 15:49:47'),
 (37, 'Hijriah Y, S.IP.,M.M', NULL, 'Penelaah Teknis Kebijakan', 'Pemerintah Kabupaten Gowa', 'perpindahan_jabatan', 'belum_dinilai', 'https://drive.google.com/drive/folders/1IgeBUdbLn2GV9eDAsM6rrIBQMfF7agOp?usp=drive_link', '2026-09-29 15:50:55', '2026-09-29 15:50:55'),
 (38, 'Reinard Alsius, S.STP, M.Adm.SDA', NULL, 'Penelaah Teknis Kebijakan', 'Pemerintah Provinsi Sulawesi Selatan', 'perpindahan_jabatan', 'belum_dinilai', 'https://drive.google.com/drive/folders/1CcJkxoI1WIgHiBk8T0Gw9PgYuaAuMDOX', '2026-09-29 15:52:13', '2026-09-29 15:52:13'),
@@ -507,9 +581,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('3ndKXPRQdHUaDtLs0WIshRRBxIzUbu7FBPpvH8OO', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36', 'YToxMDp7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo2OiJfdG9rZW4iO3M6NDA6InVpY25qajlQdXNtQzZ2Z2Y0TG1yZ0hNcTE5TXROdEEzSkRhT3JoUVciO3M6OToiX3ByZXZpb3VzIjthOjI6e3M6MzoidXJsIjtzOjM3OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvcGFuZHVhbi1wZW5ndWppIjtzOjU6InJvdXRlIjtzOjE1OiJwYW5kdWFuLnBlbmd1amkiO31zOjc6InVzZXJfaWQiO2k6MTY7czoxMjoibmFtYV9wZW5ndWppIjtzOjMyOiJNdWhhbWFkIElrYmFsIFRob2xhLCBTLlNpLiwgTS5TaSI7czo0OiJyb2xlIjtzOjc6InBlbmd1amkiO3M6MTI6InRpcGVfcGVuZ3VqaSI7czo5OiJ3YXdhbmNhcmEiO3M6MTA6InBlbmlsYWlfaWQiO2k6MTc7czoxMjoiaXNfd2F3YW5jYXJhIjtiOjE7czoxMToiaXNfdGVydHVsaXMiO2I6MDt9', 1790740118),
-('S6d1Cum1UobHqp8OhbqpcYZZ0PsbTUfaXV0Ab1uj', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36', 'YToxMDp7czo2OiJfdG9rZW4iO3M6NDA6IkxrcTZabmcxUGZxUExEZzFzNnN4RUlSRkYycXM1eGIzcU5VN05nTTQiO3M6OToiX3ByZXZpb3VzIjthOjI6e3M6MzoidXJsIjtzOjc3OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvcGVzZXJ0YS1wZW5pbGFpYW4/YnVrYT1UaXRvJTIwU2FwdXRyYSUyQyUyMFMuU1RQJTJDLk0uRSI7czo1OiJyb3V0ZSI7czoxNzoicGVzZXJ0YS5wZW5pbGFpYW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjc6InVzZXJfaWQiO2k6MTU7czoxMjoibmFtYV9wZW5ndWppIjtzOjMwOiJBeXVuIFNyaSBEYW1heWFudGksIFMuSC4sIE0uSC4iO3M6NDoicm9sZSI7czo3OiJwZW5ndWppIjtzOjEyOiJ0aXBlX3Blbmd1amkiO3M6OToid2F3YW5jYXJhIjtzOjEwOiJwZW5pbGFpX2lkIjtpOjE2O3M6MTI6ImlzX3dhd2FuY2FyYSI7YjoxO3M6MTE6ImlzX3RlcnR1bGlzIjtiOjA7fQ==', 1790739182),
-('vAgS1evmA8xT7wYrNIeYsFQv4lz4PfDoiCayTdoi', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiVTlha1hyN0VzWlRTbzZabGpIalFrVExUUHJzbklMNGdsaE5UMFljUiI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzU6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9wZW5pbGFpIjtzOjU6InJvdXRlIjtzOjEzOiJhZG1pbi5wZW5pbGFpIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1790737572);
+('GEtxB27VEc6DOYoZ6iZ348ricTVBNQtTYOF2IR0F', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36', 'YToxMDp7czo2OiJfdG9rZW4iO3M6NDA6IlFiM3ZYVUtQRm1zallXaEV1TVF5RDl2TkxPazBXM213QnhMejl1ek8iO3M6OToiX3ByZXZpb3VzIjthOjI6e3M6MzoidXJsIjtzOjM3OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYWRtaW4vcGVuaWxhaWFuIjtzOjU6InJvdXRlIjtzOjE1OiJhZG1pbi5wZW5pbGFpYW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjc6InVzZXJfaWQiO2k6MTtzOjEyOiJuYW1hX3Blbmd1amkiO3M6MjA6IkFkbWluaXN0cmF0b3IgTEFOIFJJIjtzOjQ6InJvbGUiO3M6NToiYWRtaW4iO3M6MTI6InRpcGVfcGVuZ3VqaSI7czo0OiJub25lIjtzOjEwOiJwZW5pbGFpX2lkIjtOO3M6MTI6ImlzX3dhd2FuY2FyYSI7YjowO3M6MTE6ImlzX3RlcnR1bGlzIjtiOjA7fQ==', 1790928453),
+('s4yVg8PjULCoJj1zNc1luijLjkgdJIn1QpjS3v5z', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36', 'YToxMDp7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo2OiJfdG9rZW4iO3M6NDA6InBBa0RLNk1aMFB1TGpqbmlrSkR4eTlPUVdSb2Y3cG4zemFManZibksiO3M6OToiX3ByZXZpb3VzIjthOjI6e3M6MzoidXJsIjtzOjM5OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvcGVzZXJ0YS1wZW5pbGFpYW4iO3M6NToicm91dGUiO3M6MTc6InBlc2VydGEucGVuaWxhaWFuIjt9czo3OiJ1c2VyX2lkIjtpOjE5O3M6MTI6Im5hbWFfcGVuZ3VqaSI7czozMjoiRHIuIERpZGlrIElza2FuZGFyLCBTLlNvcy4sIE0uU2kiO3M6NDoicm9sZSI7czo3OiJwZW5ndWppIjtzOjEyOiJ0aXBlX3Blbmd1amkiO3M6ODoidGVydHVsaXMiO3M6MTA6InBlbmlsYWlfaWQiO2k6MjA7czoxMjoiaXNfd2F3YW5jYXJhIjtiOjA7czoxMToiaXNfdGVydHVsaXMiO2I6MTt9', 1790923812);
 
 -- --------------------------------------------------------
 
@@ -665,7 +738,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT untuk tabel `login_pengujis`
 --
 ALTER TABLE `login_pengujis`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT untuk tabel `migrations`
@@ -677,31 +750,31 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT untuk tabel `nilai_finals`
 --
 ALTER TABLE `nilai_finals`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT untuk tabel `penilaians`
 --
 ALTER TABLE `penilaians`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT untuk tabel `penilaian_details`
 --
 ALTER TABLE `penilaian_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=154;
 
 --
 -- AUTO_INCREMENT untuk tabel `penilais`
 --
 ALTER TABLE `penilais`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT untuk tabel `penugasan_penilais`
 --
 ALTER TABLE `penugasan_penilais`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=160;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=253;
 
 --
 -- AUTO_INCREMENT untuk tabel `pesertas`
